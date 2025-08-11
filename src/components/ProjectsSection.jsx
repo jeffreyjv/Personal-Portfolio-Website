@@ -1,34 +1,26 @@
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import covid from "../assets/covid.png";
+import spaceinv from "../assets/spaceinv.jpg";
 
 const projects = [
   {
     id: 1,
-    title: "SaaS Landing Page",
-    description: "A beautiful landing page app using React and Tailwind.",
-    image: "/projects/project1.png",
-    tags: ["React", "TailwindCSS", "Supabase"],
+    title: "Covid-19-Dashboard",
+    description: "COVID-19 information dashboard written in Javascript and uses a React front-end with a Firebase back-end.",
+    image: covid,
+    tags: ["React", "Firebase", "Javascript"],
     demoUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/jeffreyjv/Covid-19-Dashboard",
   },
   {
     id: 2,
-    title: "Orbit Analytics Dashboard",
+    title: "Space Invaders Game",
     description:
       "Interactive analytics dashboard with data visualization and filtering capabilities.",
-    image: "/projects/project2.png",
-    tags: ["TypeScript", "D3.js", "Next.js"],
+    image: spaceinv,
+    tags: ["Python"],
     demoUrl: "#",
-    githubUrl: "#",
-  },
-  {
-    id: 3,
-    title: "E-commerce Platform",
-    description:
-      "Full-featured e-commerce platform with user authentication and payment processing.",
-    image: "/projects/project3.png",
-    tags: ["React", "Node.js", "Stripe"],
-    demoUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/jeffreyjv/Space-Invaders",
   },
 ];
 

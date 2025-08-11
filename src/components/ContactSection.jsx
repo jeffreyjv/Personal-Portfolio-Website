@@ -1,6 +1,7 @@
 import {
   Instagram,
   Linkedin,
+  Youtube,
   Mail,
   MapPin,
   Phone,
@@ -94,8 +95,11 @@ export const ContactSection = () => {
                 <a href="#" target="https://www.linkedin.com/in/jeffreyvincent-796/">
                   <Linkedin />
                 </a>
-                <a href="#" target="_blank">
+                <a href="#" target="https://www.instagram.com/jeffreyjv/">
                   <Instagram />
+                </a>
+                <a href="#" target="https://www.youtube.com/@jeffreyjv">
+                  <Youtube />
                 </a>
               </div>
             </div>

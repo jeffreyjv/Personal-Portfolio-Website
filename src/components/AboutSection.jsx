@@ -48,10 +48,9 @@ export const AboutSection = () => {
                   <Code className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                  <h4 className="font-semibold text-lg"> Web Development</h4>
+                  <h4 className="font-semibold text-lg">Ally Financial - Cloud Engineer</h4>
                   <p className="text-muted-foreground">
-                    Creating responsive websites and web applications with
-                    modern frameworks.
+                    Full-stack software engineer on the Cloud Reliability Engineering Team
                   </p>
                 </div>
               </div>
@@ -62,10 +61,9 @@ export const AboutSection = () => {
                   <User className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                  <h4 className="font-semibold text-lg">UI/UX Design</h4>
+                  <h4 className="font-semibold text-lg">Ally Financial - DevSecOps Engineer</h4>
                   <p className="text-muted-foreground">
-                    Designing intuitive user interfaces and seamless user
-                    experiences.
+                    Software engineer on the Enterprise DevSecOps Team focused cybersecurity & GitLab.
                   </p>
                 </div>
               </div>
@@ -77,10 +75,9 @@ export const AboutSection = () => {
                 </div>
 
                 <div className="text-left">
-                  <h4 className="font-semibold text-lg">Project Management</h4>
+                  <h4 className="font-semibold text-lg">Ally Financial - DevSecOps Intern</h4>
                   <p className="text-muted-foreground">
-                    Leading projects from conception to completion with agile
-                    methodologies.
+                    Intern on the DevSecOps Team focused on the DevSecOps Portal.
                   </p>
                 </div>
               </div>
