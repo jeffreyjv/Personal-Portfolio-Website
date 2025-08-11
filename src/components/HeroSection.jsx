@@ -1,4 +1,4 @@
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Linkedin } from "lucide-react";
 import profpic from "../assets/profpic.jpg";
 
 export const HeroSection = () => {
@@ -31,13 +31,23 @@ export const HeroSection = () => {
             Cloud Engineer, specializing in full-stack development! Enjoy traveling and videography in my free time.
           </p>
 
-          <div className="pt-4 opacity-0 animate-fade-in-delay-4">
+          <div className="pt-4 opacity-0 animate-fade-in-delay-4 flex space-x-4">
             <a href="#projects" className="cosmic-button">
               View My Work
+            </a>
+            <a
+              href="https://www.linkedin.com/in/jeffreyvincent-796/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="cosmic-button flex items-center gap-2"
+            >
+              Connect with me! <Linkedin size={20} />
             </a>
           </div>
         </div>
       </div>
+
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
         <span className="text-sm text-muted-foreground mb-2"> Scroll </span>
         <ArrowDown className="h-5 w-5 text-primary" />
