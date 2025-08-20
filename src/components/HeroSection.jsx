@@ -8,14 +8,20 @@ export const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center px-4"
     >
       <div className="container max-w-4xl mx-auto flex flex-row items-center space-x-8 z-10">
-        {/* Image on the left */}
-        <div className="flex-shrink-0">
-          <img
-            src={profpic}
-            alt="My Example"
-            className="w-48 h-48 rounded-full object-cover"
-          />
-        </div>
+        {/* Profile with spinning ring */}
+        <div className="relative flex-shrink-0 w-48 h-48">
+        {/* Gradient spinning ring */}
+        <div className="absolute -inset-2 rounded-full border-4 border-t-primary border-r-purple-500 border-b-primary/50 border-l-purple-300 animate-spin z-0"></div>
+
+        {/* Profile image */}
+        <img
+          src={profpic}
+          alt="My Example"
+          className="w-full h-full rounded-full object-cover relative z-10"
+        />
+      </div>
+
+
 
         {/* Text on the right */}
         <div className="text-left">
