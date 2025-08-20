@@ -12,16 +12,6 @@ const projects = [
     demoUrl: "#",
     githubUrl: "https://github.com/jeffreyjv/Covid-19-Dashboard",
   },
-  {
-    id: 2,
-    title: "Space Invaders Game",
-    description:
-      "Interactive analytics dashboard with data visualization and filtering capabilities.",
-    image: spaceinv,
-    tags: ["Python"],
-    demoUrl: "#",
-    githubUrl: "https://github.com/jeffreyjv/Space-Invaders",
-  },
 ];
 
 export const ProjectsSection = () => {

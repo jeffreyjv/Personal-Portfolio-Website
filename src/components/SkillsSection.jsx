@@ -18,63 +18,71 @@ export const SkillsSection = () => {
   const [activeCategory, setActiveCategory] = useState("all");
 
   return (
-    <section id="skills" className="py-24 px-4 relative bg-secondary/30">
+    <section id="skills" className="py-24 px-4 relative">
       <div className="container mx-auto max-w-5xl">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-          My <span className="text-primary">Skills</span>
-        </h2>
+        {/* Card wrapper */}
+        <div className="bg-card/90 backdrop-blur-md p-12 rounded-3xl shadow-lg">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+            My <span className="text-primary">Skills</span>
+          </h2>
 
-        {/* Category Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          <button
-            onClick={() => setActiveCategory("all")}
-            className={cn(
-              "px-5 py-2 rounded-full transition-colors duration-300 capitalize",
-              activeCategory === "all"
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary/70 hover:bg-secondary"
-            )}
-          >
-            all
-          </button>
-          {categories.map((category) => (
+          {/* Category Filter Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
             <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => setActiveCategory("all")}
               className={cn(
-                "px-5 py-2 rounded-full transition-colors duration-300 capitalize",
-                activeCategory === category
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary/70 hover:bg-secondary"
+                "px-5 py-2 rounded-full transition-all duration-300 capitalize font-medium border-2",
+                activeCategory === "all"
+                  ? "bg-primary text-primary-foreground border-primary shadow-[0_0_10px_rgba(167,139,250,0.5)]"
+                  : "bg-transparent text-muted-foreground border-primary/40 hover:bg-primary/20 hover:text-primary"
               )}
             >
-              {category}
+              all
             </button>
-          ))}
-        </div>
 
-        {/* Skills Display */}
-        <div className="grid gap-12">
-          {categories
-            .filter(
-              (cat) => activeCategory === "all" || activeCategory === cat
-            )
-            .map((category) => (
-              <div key={category} className="text-center">
-                {/* Chips */}
-                <div className="flex flex-wrap justify-center gap-3">
-                  {skills[category].map((skill, i) => (
-                    <span
-                      key={i}
-                      className="px-4 py-2 bg-card shadow-sm rounded-full text-sm font-medium transition-all duration-300 cursor-pointer
-                                 hover:bg-primary/20 hover:text-primary hover:shadow-[0_0_10px_rgba(59,130,246,0.6)]"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={cn(
+                  "px-5 py-2 rounded-full transition-all duration-300 capitalize font-medium border-2",
+                  activeCategory === category
+                    ? "bg-primary text-primary-foreground border-primary shadow-[0_0_10px_rgba(167,139,250,0.5)]"
+                    : "bg-transparent text-muted-foreground border-primary/40 hover:bg-primary/20 hover:text-primary"
+                )}
+              >
+                {category}
+              </button>
             ))}
+          </div>
+
+
+
+          {/* Skills Display */}
+          <div className="grid gap-12">
+            {categories
+              .filter(
+                (cat) => activeCategory === "all" || activeCategory === cat
+              )
+              .map((category) => (
+                <div key={category} className="text-center">
+                  {/* Chips */}
+                  <div className="flex flex-wrap justify-center gap-3">
+                    {skills[category].map((skill, i) => (
+                      <span
+                        key={i}
+                        className="px-4 py-2 bg-secondary/20 text-primary shadow-[0_0_8px_rgba(167,139,250,0.3)]
+                                   rounded-full text-sm font-medium cursor-pointer
+                                   transition-all duration-300
+                                   hover:shadow-[0_0_20px_rgba(167,139,250,0.7)] hover:scale-105"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
       </div>
     </section>
