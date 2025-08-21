@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Briefcase, Code, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowDown, Briefcase, Code, User, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const AboutSection = () => {
   const slides = [
+    {
+      role: "UNC Chapel Hill - Computer Science Grad",
+      description: "B.S. in Computer Science, Minor in Information Systems & Statistics",
+      image: "unc.png",
+      icon: <Code className="h-6 w-6 text-primary" />,
+    },
     {
       role: "Ally Financial - Cloud Engineer",
       description: "Full-stack software engineer on the Cloud Reliability Engineering Team",
@@ -18,7 +24,7 @@ export const AboutSection = () => {
     },
     {
       role: "Ally Financial - DevSecOps Intern",
-      description: "Intern on the DevSecOps Team where I created the DevSecOps Portal, the beginning of an IDP at Ally.",
+      description: "Intern on the DevSecOps Team where I created the DevSecOps Portal, the beginning of an IDP.",
       image: "ally.png",
       icon: <Briefcase className="h-6 w-6 text-primary" />,
     },
@@ -32,7 +38,7 @@ export const AboutSection = () => {
     setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
 
   return (
-    <section id="about" className="py-24 px-4 relative bg-secondary/30">
+    <section id="about" className="py-32 px-4 relative bg-secondary/30">
       <div className="container mx-auto max-w-5xl">
         {/* Main Card */}
         <div className="bg-card p-12 rounded-3xl shadow-xl flex flex-col space-y-12">
@@ -79,7 +85,7 @@ export const AboutSection = () => {
                 <img
                   src={slides[current].image}
                   alt={slides[current].role}
-                  className="w-full h-48 object-cover rounded-lg mb-4"
+                  className="w-full h-48 object-contain rounded-lg mb-4"
                 />
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <h4 className="font-semibold text-lg">{slides[current].role}</h4>
@@ -103,6 +109,11 @@ export const AboutSection = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
+        <span className="text-sm text-muted-foreground mb-2"> Scroll </span>
+        <ArrowDown className="h-5 w-5 text-primary" />
       </div>
     </section>
   );

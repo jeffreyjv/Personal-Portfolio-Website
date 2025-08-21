@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { cn } from "./lib/utils";
+import { ArrowDown } from "lucide-react";
 
 const skills = {
   frontend: ["React", "Vue", "HTML/CSS", "JavaScript"],
@@ -18,7 +19,7 @@ export const SkillsSection = () => {
   const [activeCategory, setActiveCategory] = useState("all");
 
   return (
-    <section id="skills" className="py-24 px-4 relative">
+    <section id="skills" className="py-32 px-4 relative">
       <div className="container mx-auto max-w-5xl">
         {/* Card wrapper */}
         <div className="bg-card/90 backdrop-blur-md p-12 rounded-3xl shadow-lg">
@@ -84,6 +85,11 @@ export const SkillsSection = () => {
               ))}
           </div>
         </div>
+      </div>
+
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
+        <span className="text-sm text-muted-foreground mb-2"> Scroll </span>
+        <ArrowDown className="h-5 w-5 text-primary" />
       </div>
     </section>
   );

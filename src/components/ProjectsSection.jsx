@@ -1,10 +1,21 @@
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import covid from "../assets/covid.png";
+import website from "../assets/website.png";
 import spaceinv from "../assets/spaceinv.jpg";
+import { ArrowDown } from "lucide-react";
 
 const projects = [
   {
     id: 1,
+    title: "Personal Portfolio Website",
+    description: "React + Tailwind CSS Personal Portfolio Website showcasing my projects, skills, and experience.",
+    image: website,
+    tags: ["React", "Tailwind", "Javascript"],
+    demoUrl: "#",
+    githubUrl: "https://github.com/jeffreyjv/Personal-Portfolio-Website",
+  },
+  {
+    id: 2,
     title: "Covid-19-Dashboard",
     description: "COVID-19 information dashboard written in Javascript and uses a React front-end with a Firebase back-end.",
     image: covid,
@@ -87,6 +98,11 @@ export const ProjectsSection = () => {
             Check My Github <ArrowRight size={16} />
           </a>
         </div>
+      </div>
+
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
+        <span className="text-sm text-muted-foreground mb-2"> Scroll </span>
+        <ArrowDown className="h-5 w-5 text-primary" />
       </div>
     </section>
   );

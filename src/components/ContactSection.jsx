@@ -54,34 +54,6 @@ export const ContactSection = () => {
             </div>
           </div>
 
-          {/* Social Links */}
-          <div className="flex justify-center space-x-6">
-            <a
-              href="https://www.linkedin.com/in/jeffreyvincent-796/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-            >
-              <Linkedin size={32} className="text-primary" />
-            </a>
-            <a
-              href="https://www.instagram.com/jeffreyjv/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-            >
-              <Instagram size={32} className="text-primary" />
-            </a>
-            <a
-              href="https://www.youtube.com/@jeffreyjv"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-            >
-              <Youtube size={32} className="text-primary" />
-            </a>
-          </div>
-
           {/* LinkedIn Callout */}
           <div className="bg-primary/10 p-6 rounded-xl flex flex-col items-center space-y-3">
             <Linkedin size={36} className="text-primary" />

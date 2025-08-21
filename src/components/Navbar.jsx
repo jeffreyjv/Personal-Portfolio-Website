@@ -16,12 +16,13 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.screenY > 10);
+      setIsScrolled(window.scrollY > 10); // fixed from screenY
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <nav
       className={cn(
@@ -30,13 +31,12 @@ export const Navbar = () => {
       )}
     >
       <div className="container flex items-center justify-between">
+        {/* Brand */}
         <a
-          className="text-xl font-bold text-primary flex items-center"
+          className="text-xl font-bold text-glow text-white flex items-center"
           href="#hero"
         >
-          <span className="relative z-10">
-            <span className="text-glow text-foreground"> Jeffrey Vincent </span>{" "}
-          </span>
+          <span className="relative z-10">Jeffrey Vincent</span>
         </a>
 
         {/* desktop nav */}
@@ -45,26 +45,26 @@ export const Navbar = () => {
             <a
               key={key}
               href={item.href}
-              className="text-foreground/80 hover:text-primary transition-colors duration-300 font-semibold"
+              className="text-glow text-white transition-colors duration-300 font-semibold"
             >
               {item.name}
             </a>
           ))}
         </div>
 
-        {/* mobile nav */}
-
+        {/* mobile nav button */}
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="md:hidden p-2 text-foreground z-50"
+          className="md:hidden p-2 text-glow text-white z-50"
           aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
         >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}{" "}
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
+        {/* mobile nav menu */}
         <div
           className={cn(
-            "fixed inset-0 bg-background/95 backdroup-blur-md z-40 flex flex-col items-center justify-center",
+            "fixed inset-0 bg-background/95 backdrop-blur-md z-40 flex flex-col items-center justify-center",
             "transition-all duration-300 md:hidden",
             isMenuOpen
               ? "opacity-100 pointer-events-auto"
@@ -76,7 +76,7 @@ export const Navbar = () => {
               <a
                 key={key}
                 href={item.href}
-                className="text-foreground/80 hover:text-primary transition-colors duration-300 font-semibold"
+                className="text-glow text-white transition-colors duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
