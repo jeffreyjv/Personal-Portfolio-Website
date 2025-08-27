@@ -2,6 +2,7 @@ import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import covid from "../assets/covid.png";
 import website from "../assets/website.png";
 import spaceinv from "../assets/spaceinv.jpg";
+import auxbot from "../assets/auxbot.png";
 import { ArrowDown } from "lucide-react";
 
 const projects = [
@@ -22,6 +23,15 @@ const projects = [
     tags: ["React", "Firebase", "Javascript"],
     demoUrl: "#",
     githubUrl: "https://github.com/jeffreyjv/Covid-19-Dashboard",
+  },
+  {
+    id: 3,
+    title: "Aux Bot Discord Bot",
+    description: "Discord Bot that streams music through Youtube with play, pause, stop, & skip functionality.",
+    image: auxbot,
+    tags: ["Python", "Discord.py", "APIs"],
+    demoUrl: "#",
+    githubUrl: "https://github.com/jeffreyjv/Aux-Bot-Discord-Bot",
   },
 ];
 
