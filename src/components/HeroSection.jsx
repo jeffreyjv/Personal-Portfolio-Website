@@ -5,58 +5,68 @@ export const HeroSection = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center px-4"
+      className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-12 text-center"
     >
-      <div className="container max-w-4xl mx-auto flex flex-row items-center space-x-8 z-10">
-        {/* Profile with spinning ring */}
-        <div className="relative flex-shrink-0 w-48 h-48">
-        {/* Gradient spinning ring */}
-        <div className="absolute -inset-2 rounded-full border-4 border-t-primary border-r-purple-500 border-b-primary/50 border-l-purple-300 animate-spin z-0"></div>
-
-        {/* Profile image */}
-        <img
-          src={profpic}
-          alt="My Example"
-          className="w-full h-full rounded-full object-cover relative z-10"
-        />
-      </div>
-
-
-
-        {/* Text on the right */}
-        <div className="text-left">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-            <span className="opacity-0 animate-fade-in">Hi, I'm</span>
-            <span className="text-primary opacity-0 animate-fade-in-delay-1">
-              {" "}
-              Jeffrey Vincent
-            </span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl opacity-0 animate-fade-in-delay-3 mt-4">
-            Cloud Engineer, specializing in full-stack development! Enjoy traveling and videography in my free time.
-          </p>
-
-          <div className="pt-4 opacity-0 animate-fade-in-delay-4 flex space-x-4">
-            <a href="#projects" className="cosmic-button">
-              View My Work
-            </a>
-            <a
-              href="https://www.linkedin.com/in/jeffreyvincent-796/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="cosmic-button flex items-center gap-2"
-            >
-              Connect with me! <Linkedin size={20} />
-            </a>
-          </div>
+      {/* Profile photo */}
+      <div className="opacity-0 animate-[fade-in_0.9s_cubic-bezier(0.16,1,0.3,1)_forwards] mb-8">
+        <div className="relative w-28 h-28 mx-auto">
+          <img
+            src={profpic}
+            alt="Jeffrey Vincent"
+            className="w-full h-full rounded-full object-cover ring-4 ring-border shadow-xl"
+          />
+          <span className="absolute bottom-1 right-1 w-4 h-4 bg-green-400 rounded-full ring-2 ring-background" />
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
-        <span className="text-sm text-muted-foreground mb-2"> Scroll </span>
-        <ArrowDown className="h-5 w-5 text-primary" />
+      {/* Eyebrow */}
+      <p
+        className="opacity-0 animate-[fade-in_0.9s_cubic-bezier(0.16,1,0.3,1)_0.15s_forwards]
+                   text-xs font-semibold uppercase tracking-[0.2em] text-muted mb-4"
+      >
+        Cloud Engineer &amp; Full-Stack Developer
+      </p>
+
+      {/* Headline */}
+      <h1
+        className="opacity-0 animate-[fade-in_0.9s_cubic-bezier(0.16,1,0.3,1)_0.3s_forwards]
+                   text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-foreground leading-none mb-6"
+      >
+        Hi, I'm{" "}
+        <span className="text-primary">Jeffrey</span>
+        <br />
+        <span className="text-primary">Vincent.</span>
+      </h1>
+
+      {/* Subtext */}
+      <p
+        className="opacity-0 animate-[fade-in_0.9s_cubic-bezier(0.16,1,0.3,1)_0.45s_forwards]
+                   text-lg md:text-xl text-muted max-w-xl mx-auto mb-10 leading-relaxed"
+      >
+        Building cloud-native solutions and elegant interfaces. Based in Charlotte, NC.
+        Exploring the world through travel and videography on the side.
+      </p>
+
+      {/* CTAs */}
+      <div className="opacity-0 animate-[fade-in_0.9s_cubic-bezier(0.16,1,0.3,1)_0.6s_forwards] flex flex-wrap gap-3 justify-center">
+        <a href="#projects" className="apple-btn-primary">
+          View My Work
+        </a>
+        <a
+          href="https://www.linkedin.com/in/jeffreyvincent-796/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="apple-btn-secondary"
+        >
+          <Linkedin size={15} />
+          LinkedIn
+        </a>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 animate-[fade-in_0.9s_cubic-bezier(0.16,1,0.3,1)_1s_forwards]">
+        <span className="text-[10px] uppercase tracking-[0.2em] text-muted">Scroll</span>
+        <ArrowDown className="h-4 w-4 text-muted animate-bounce" />
       </div>
     </section>
   );
