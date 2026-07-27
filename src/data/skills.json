@@ -1,21 +1,35 @@
 {
-  "generatedAt": null,
-  "source": "manual",
   "groups": [
     {
       "id": "frontend",
       "label": "Frontend",
-      "items": ["React", "Vue", "HTML / CSS", "JavaScript"]
+      "items": [
+        "React",
+        "Vue",
+        "HTML / CSS",
+        "JavaScript"
+      ]
     },
     {
       "id": "backend",
       "label": "Backend",
-      "items": ["FastAPI", "Flask", "GraphQL", "Python"]
+      "items": [
+        "FastAPI",
+        "Flask",
+        "GraphQL",
+        "Python"
+      ]
     },
     {
       "id": "tools",
       "label": "Tools & DevOps",
-      "items": ["Git", "GitHub", "Docker", "GitLab", "VS Code"]
+      "items": [
+        "Git",
+        "GitHub",
+        "Docker",
+        "GitLab",
+        "VS Code"
+      ]
     },
     {
       "id": "certifications",
@@ -27,6 +41,5 @@
         "GitLab CI/CD Associate"
       ]
     }
-  ],
-  "uncategorized": []
+  ]
 }

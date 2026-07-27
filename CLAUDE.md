@@ -5,11 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev             # dev server (5173, falls back to 5174+ if taken)
-npm run build           # production build — use this to verify before reporting done
-npm run lint            # ESLint
-npm run preview         # preview the production build
-npm run sync:linkedin -- <export-dir> [--dry-run]   # regenerate skills/experience from a LinkedIn export
+npm run dev       # dev server (5173, falls back to 5174+ if taken)
+npm run build     # production build — use this to verify before reporting done
+npm run lint      # ESLint
+npm run preview   # preview the production build
 ```
 
 There are no tests. Always run `npm run build && npm run lint` after changes.
@@ -42,12 +41,14 @@ Package is **`motion`**, imported from **`motion/react`** (`framer-motion` is th
 
 All content lives in `src/data/` — **no content belongs in component files**.
 
-| File | Contents | Written by |
-|---|---|---|
-| `skills.json` | `groups[{id,label,items[]}]` + `uncategorized[]` | `sync:linkedin` |
-| `experience.json` | `items[{id,kind,role,company,startDate,endDate,current,description,logo}]` | `sync:linkedin` |
-| `projects.json` | `projects[{slug,repo,githubId,title,summary,image,tags,demoUrl,order}]` | by hand |
-| `nav.js`, `profile.js` | nav items, contact links | by hand |
+All of it is hand-edited — there is no CMS and no import step.
+
+| File | Contents |
+|---|---|
+| `skills.json` | `groups[{id,label,items[]}]` — 4 groups, `items` are plain strings |
+| `experience.json` | `items[{id,kind,role,company,location,startDate,endDate,current,description,logo}]` |
+| `projects.json` | `projects[{slug,repo,githubId,title,summary,image,tags,demoUrl,order}]` |
+| `nav.js`, `profile.js` | nav items, contact links |
 
 - `src/data/images.js` maps an image *filename* to its bundled URL via `import.meta.glob` — that's why `projects.json` stores `"website.png"` rather than an import. Unknown filename → `null` → `<Monogram>` placeholder.
 - Dates are `"YYYY-MM"` or `"YYYY"`; `formatRange()` in `src/lib/format.js` renders them and returns `null` when there's no start date, so undated entries simply show no range.
@@ -63,16 +64,7 @@ All content lives in `src/data/` — **no content belongs in component files**.
 - Mark a repo **featured** by adding the `portfolio-featured` topic on GitHub — it then ranks first in the "More on GitHub" row.
 - Run `vercel dev` once before deploying; `vite build` gives *zero* syntax checking on `api/`.
 
-### LinkedIn sync
-
-**There is no live LinkedIn API for this.** The official API returns only name, photo, email and locale — skills and positions require partner approval. Scraping violates their User Agreement. The supported path is LinkedIn's data export (Settings → Data privacy → Get a copy of your data).
-
-`scripts/sync-linkedin.mjs` parses that export's CSVs and rewrites `skills.json` + `experience.json`.
-
-- **It preserves hand-written `description` values** on entries whose `id` already exists. Only genuinely new entries take LinkedIn's text (condensed, and flagged "needs editing"). Without this rule every sync would clobber the site's copy with résumé bullets.
-- Skill → group mapping lives in `scripts/skill-groups.js` and is **meant to be edited**. Unmatched skills are reported *and* persisted to `skills.json → uncategorized` so nothing is silently lost.
-- Missing CSVs are skipped, never treated as "delete everything".
-- Run on a clean tree and review with `git diff src/data/`. The export contains your address, phone and messages — it's gitignored, never commit it.
+**Note on LinkedIn:** there is no live LinkedIn API for skills or positions — the official API exposes only name, photo, email and locale, and scraping violates their User Agreement. Skills and experience are therefore maintained by hand in the JSON files above.
 
 ### Command palette
 

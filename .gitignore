@@ -20,11 +20,6 @@ dist-ssr
 # Vercel
 .vercel
 
-# LinkedIn data export — contains address, phone number, and messages.
-# Never commit this.
-linkedin-export/
-*LinkedInDataExport*
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
