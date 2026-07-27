@@ -1,0 +1,52 @@
+{
+  "projects": [
+    {
+      "slug": "personal-portfolio-website",
+      "repo": "jeffreyjv/Personal-Portfolio-Website",
+      "githubId": 1035562294,
+      "title": "Personal Portfolio Website",
+      "summary": "React + Tailwind CSS personal portfolio showcasing projects, skills, and experience.",
+      "image": "website.png",
+      "tags": [
+        "React",
+        "Tailwind",
+        "JavaScript"
+      ],
+      "demoUrl": "https://jeffrey-vincent-portfolio.vercel.app",
+      "featured": true,
+      "order": 1
+    },
+    {
+      "slug": "covid-19-dashboard",
+      "repo": "jeffreyjv/Covid-19-Dashboard",
+      "githubId": 491959837,
+      "title": "Covid-19 Dashboard",
+      "summary": "COVID-19 information dashboard built with a React front-end and Firebase back-end.",
+      "image": "covid.png",
+      "tags": [
+        "React",
+        "Firebase",
+        "JavaScript"
+      ],
+      "demoUrl": null,
+      "featured": true,
+      "order": 2
+    },
+    {
+      "slug": "aux-bot",
+      "repo": "jeffreyjv/Aux-Bot-Discord-Bot",
+      "githubId": 1045349440,
+      "title": "Aux Bot",
+      "summary": "Discord bot that streams music from YouTube with play, pause, stop, and skip controls.",
+      "image": "auxbot.png",
+      "tags": [
+        "Python",
+        "Discord.py",
+        "APIs"
+      ],
+      "demoUrl": null,
+      "featured": true,
+      "order": 3
+    }
+  ]
+}

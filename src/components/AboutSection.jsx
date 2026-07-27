@@ -1,31 +1,9 @@
 import { ScrollReveal } from "./ScrollReveal";
+import { Monogram } from "./Monogram";
+import experienceData from "@/data/experience.json";
+import { formatRange } from "@/lib/format";
 
-const experience = [
-  {
-    role: "Cloud Engineer",
-    company: "Ally Financial",
-    description: "Full-stack software engineer on the Cloud Reliability Engineering Team.",
-    logo: "ally.png",
-  },
-  {
-    role: "DevSecOps Engineer",
-    company: "Ally Financial",
-    description: "Enterprise DevSecOps Team — focused on cybersecurity & GitLab pipelines.",
-    logo: "ally.png",
-  },
-  {
-    role: "DevSecOps Intern",
-    company: "Ally Financial",
-    description: "Created the DevSecOps Portal, the beginning of an internal developer platform.",
-    logo: "ally.png",
-  },
-  {
-    role: "B.S. Computer Science",
-    company: "UNC Chapel Hill",
-    description: "Minor in Information Systems & Statistics.",
-    logo: "unc.png",
-  },
-];
+const experience = experienceData.items;
 
 export const AboutSection = () => {
   return (
@@ -82,22 +60,40 @@ export const AboutSection = () => {
 
           {/* Right: experience cards — plain div so both columns share the same top edge */}
           <div className="flex flex-col gap-4">
-            {experience.map((item, i) => (
-              <ScrollReveal key={i} delay={100 + i * 80}>
-                <div className="flex items-start gap-4 p-5 rounded-2xl bg-card border border-border hover:shadow-md transition-shadow duration-300">
-                  <img
-                    src={item.logo}
-                    alt={item.company}
-                    className="w-10 h-10 rounded-xl object-contain flex-shrink-0 bg-surface p-1"
-                  />
-                  <div>
-                    <p className="font-semibold text-foreground text-sm">{item.role}</p>
-                    <p className="text-xs text-primary font-medium mb-1">{item.company}</p>
-                    <p className="text-sm text-muted leading-snug">{item.description}</p>
+            {experience.map((item, i) => {
+              const range = formatRange(item.startDate, item.endDate, item.current);
+              return (
+                <ScrollReveal key={item.id} delay={100 + i * 80}>
+                  <div className="flex items-start gap-4 p-5 rounded-2xl bg-card border border-border hover:shadow-md transition-shadow duration-300">
+                    {item.logo ? (
+                      <img
+                        src={`/${item.logo}`}
+                        alt={item.company}
+                        width={40}
+                        height={40}
+                        className="w-10 h-10 rounded-xl object-contain flex-shrink-0 bg-surface p-1"
+                      />
+                    ) : (
+                      <Monogram
+                        name={item.company}
+                        className="w-10 h-10 rounded-xl flex-shrink-0"
+                        textClassName="text-xs"
+                      />
+                    )}
+                    <div>
+                      <p className="font-semibold text-foreground text-sm">{item.role}</p>
+                      <p className="text-xs text-primary font-medium mb-1">
+                        {item.company}
+                        {range && (
+                          <span className="text-muted font-normal"> · {range}</span>
+                        )}
+                      </p>
+                      <p className="text-sm text-muted leading-snug">{item.description}</p>
+                    </div>
                   </div>
-                </div>
-              </ScrollReveal>
-            ))}
+                </ScrollReveal>
+              );
+            })}
           </div>
         </div>
       </div>

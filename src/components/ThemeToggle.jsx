@@ -1,37 +1,18 @@
 import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { usePortfolioUI } from "@/context/portfolio-ui";
 
+/**
+ * Theme state lives in PortfolioUI so this button and the command palette's
+ * "Switch to light/dark mode" action can never disagree. The class itself is
+ * applied before first paint by the inline script in index.html.
+ */
 export const ThemeToggle = ({ className = "" }) => {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored === "light") {
-      document.documentElement.classList.remove("dark");
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-      setIsDark(true);
-    }
-  }, []);
-
-  const toggle = () => {
-    if (isDark) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-      setIsDark(true);
-    }
-  };
+  const { isDark, toggleTheme } = usePortfolioUI();
 
   return (
     <button
-      onClick={toggle}
-      aria-label="Toggle theme"
+      onClick={toggleTheme}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       className={`p-2 rounded-full transition-colors duration-200 hover:bg-border/60 ${className}`}
     >
       {isDark ? (

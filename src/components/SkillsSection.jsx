@@ -1,28 +1,9 @@
+import { motion } from "motion/react";
 import { ScrollReveal } from "./ScrollReveal";
+import skillsData from "@/data/skills.json";
+import { VIEWPORT, popIn, staggerContainer } from "@/lib/motion";
 
-const skillGroups = [
-  {
-    label: "Frontend",
-    items: ["React", "Vue", "HTML / CSS", "JavaScript"],
-  },
-  {
-    label: "Backend",
-    items: ["FastAPI", "Flask", "GraphQL", "Python"],
-  },
-  {
-    label: "Tools & DevOps",
-    items: ["Git", "GitHub", "Docker", "GitLab", "VS Code"],
-  },
-  {
-    label: "Certifications",
-    items: [
-      "AWS Solutions Architect",
-      "Azure Fundamentals",
-      "GitLab Security Specialist",
-      "GitLab CI/CD Associate",
-    ],
-  },
-];
+const skillGroups = skillsData.groups;
 
 export const SkillsSection = () => {
   return (
@@ -44,19 +25,29 @@ export const SkillsSection = () => {
                 <h3 className="text-xs font-semibold uppercase tracking-widest text-muted mb-5">
                   {group.label}
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                {/* Per-card container: each card's pills ripple when *that*
+                    card enters, rather than all 20 firing at once. 40ms — small
+                    items should ripple, not queue. */}
+                <motion.div
+                  className="flex flex-wrap gap-2"
+                  variants={staggerContainer(0.04, 0.08)}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={VIEWPORT}
+                >
                   {group.items.map((skill) => (
-                    <span
+                    <motion.span
                       key={skill}
+                      variants={popIn}
                       className="px-3.5 py-1.5 rounded-full text-sm font-medium
                                  bg-surface text-foreground border border-border
                                  hover:bg-primary/10 hover:text-primary hover:border-primary/30
                                  transition-colors duration-200 cursor-default"
                     >
                       {skill}
-                    </span>
+                    </motion.span>
                   ))}
-                </div>
+                </motion.div>
               </div>
             </ScrollReveal>
           ))}

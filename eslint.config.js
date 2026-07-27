@@ -23,7 +23,21 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // Without eslint-plugin-react's jsx-uses-vars, ESLint can't see that a JSX
+      // tag uses its import. The uppercase pattern covers normal components;
+      // `motion` is lowercase by convention (<motion.div />), so name it too.
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]|^motion$' }],
+    },
+  },
+  // Server-side + tooling code: Node globals, not browser globals.
+  {
+    files: ['api/**/*.js', 'scripts/**/*.{js,mjs}', 'vite.config.js'],
+    languageOptions: {
+      globals: globals.node,
+      sourceType: 'module',
+    },
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
 ])

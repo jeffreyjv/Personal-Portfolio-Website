@@ -1,0 +1,54 @@
+{
+  "generatedAt": null,
+  "source": "manual",
+  "items": [
+    {
+      "id": "ally-financial-cloud-engineer",
+      "kind": "work",
+      "role": "Cloud Engineer",
+      "company": "Ally Financial",
+      "location": null,
+      "startDate": null,
+      "endDate": null,
+      "current": true,
+      "description": "Full-stack software engineer on the Cloud Reliability Engineering Team.",
+      "logo": "ally.png"
+    },
+    {
+      "id": "ally-financial-devsecops-engineer",
+      "kind": "work",
+      "role": "DevSecOps Engineer",
+      "company": "Ally Financial",
+      "location": null,
+      "startDate": null,
+      "endDate": null,
+      "current": false,
+      "description": "Enterprise DevSecOps Team — focused on cybersecurity & GitLab pipelines.",
+      "logo": "ally.png"
+    },
+    {
+      "id": "ally-financial-devsecops-intern",
+      "kind": "work",
+      "role": "DevSecOps Intern",
+      "company": "Ally Financial",
+      "location": null,
+      "startDate": null,
+      "endDate": null,
+      "current": false,
+      "description": "Created the DevSecOps Portal, the beginning of an internal developer platform.",
+      "logo": "ally.png"
+    },
+    {
+      "id": "unc-chapel-hill-bs-computer-science",
+      "kind": "education",
+      "role": "B.S. Computer Science",
+      "company": "UNC Chapel Hill",
+      "location": null,
+      "startDate": null,
+      "endDate": null,
+      "current": false,
+      "description": "Minor in Information Systems & Statistics.",
+      "logo": "unc.png"
+    }
+  ]
+}
