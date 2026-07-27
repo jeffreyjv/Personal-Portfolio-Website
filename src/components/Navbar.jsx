@@ -40,7 +40,9 @@ export const Navbar = () => {
           : "bg-transparent"
       )}
     >
-      <div className="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between">
+      {/* section-shell, so the brand sits on the same left edge as every
+          section's content instead of drifting at mid widths. */}
+      <div className="section-shell h-12 flex items-center justify-between">
         {/* Brand */}
         <a
           href="#hero"
@@ -84,12 +86,18 @@ export const Navbar = () => {
           <button
             onClick={() => setPaletteOpen(true)}
             aria-label="Open command menu"
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full
-                       border border-border text-muted hover:text-foreground
+            className="hidden sm:flex items-center gap-2 w-44 lg:w-60 pl-3 pr-1.5 py-1.5
+                       rounded-full border border-border text-muted hover:text-foreground
                        hover:border-muted transition-colors duration-200 cursor-pointer"
           >
-            <Search className="h-3 w-3" />
-            <kbd className="text-[10px] font-medium tracking-wide">⌘K</kbd>
+            <Search className="h-3.5 w-3.5 shrink-0" />
+            <span className="flex-1 text-left text-xs">Search…</span>
+            <kbd
+              className="shrink-0 rounded-full border border-border px-1.5 py-0.5
+                         text-[10px] font-medium tracking-wide"
+            >
+              ⌘K
+            </kbd>
           </button>
           <button
             onClick={() => setPaletteOpen(true)}

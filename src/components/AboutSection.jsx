@@ -7,8 +7,8 @@ const experience = experienceData.items;
 
 export const AboutSection = () => {
   return (
-    <section id="about" className="py-32 px-6 bg-surface">
-      <div className="max-w-5xl mx-auto">
+    <section id="about" className="section-y bg-surface">
+      <div className="section-shell">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Left: label + heading + bio */}
           <div className="flex flex-col space-y-5">

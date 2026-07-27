@@ -7,8 +7,8 @@ const skillGroups = skillsData.groups;
 
 export const SkillsSection = () => {
   return (
-    <section id="skills" className="py-32 px-6">
-      <div className="max-w-5xl mx-auto">
+    <section id="skills" className="section-y">
+      <div className="section-shell">
         <ScrollReveal>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted mb-3">
             Expertise

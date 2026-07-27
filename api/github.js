@@ -9,6 +9,54 @@
 const USER = "jeffreyjv";
 const UPSTREAM = `https://api.github.com/users/${USER}/repos?per_page=100&sort=pushed&type=owner`;
 
+/**
+ * Card covers are owned by each repo, not by this codebase: drop an image at
+ * one of these paths and the site picks it up on the next cache refresh. First
+ * match wins, so png is the documented default and the rest are conveniences.
+ *
+ * The `HEAD` ref resolves to whatever the repo's default branch is, so this
+ * works for main/master/trunk without asking the API for `default_branch`.
+ *
+ * raw.githubusercontent.com is a plain CDN — these probes do NOT count against
+ * the API rate limit, and all repos are probed concurrently (~130ms total).
+ */
+const COVER_PATHS = [".github/preview.png", ".github/preview.webp", ".github/preview.jpg"];
+
+/** Whole-phase budget. Covers are a nice-to-have; never let them slow the
+ *  response down or fail it. On timeout every repo simply reports no cover. */
+const COVER_BUDGET_MS = 4000;
+
+const rawUrl = (fullName, path) =>
+  `https://raw.githubusercontent.com/${fullName}/HEAD/${path}`;
+
+async function findCover(fullName) {
+  for (const path of COVER_PATHS) {
+    const url = rawUrl(fullName, path);
+    try {
+      const res = await fetch(url, {
+        method: "HEAD",
+        signal: AbortSignal.timeout(2000),
+      });
+      if (res.ok) return url;
+    } catch {
+      // Network blip or timeout on one candidate — try the next.
+    }
+  }
+  return null;
+}
+
+async function findCovers(repos) {
+  const fallback = repos.map(() => null);
+  try {
+    return await Promise.race([
+      Promise.all(repos.map((r) => findCover(r.fullName))),
+      new Promise((resolve) => setTimeout(() => resolve(fallback), COVER_BUDGET_MS)),
+    ]);
+  } catch {
+    return fallback;
+  }
+}
+
 function send(res, status, body, cache) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -29,6 +77,8 @@ const pick = (r) => ({
   topics: r.topics ?? [],
   pushedAt: r.pushed_at,
   archived: r.archived,
+  // Filled in by findCovers() below, once we know which repos ship one.
+  coverUrl: null,
 });
 
 export default async function handler(req, res) {
@@ -65,6 +115,11 @@ export default async function handler(req, res) {
 
     const raw = await upstream.json();
     const repos = raw.filter((r) => !r.fork && !r.private).map(pick);
+
+    const covers = await findCovers(repos);
+    repos.forEach((r, i) => {
+      r.coverUrl = covers[i];
+    });
 
     // s-maxage: the CDN serves from edge for an hour, so GitHub sees ~1 req/hr
     // per region. stale-while-revalidate: for a day past expiry visitors get an

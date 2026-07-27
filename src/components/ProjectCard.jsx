@@ -1,4 +1,5 @@
-import { ExternalLink, Github, Star } from "lucide-react";
+import { useState } from "react";
+import { ExternalLink, Github, Sparkles, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { Monogram } from "./Monogram";
 import { formatMonthYear } from "@/lib/format";
@@ -6,6 +7,13 @@ import { SPRING } from "@/lib/motion";
 
 export const ProjectCard = ({ project }) => {
   const updated = formatMonthYear(project.pushedAt);
+
+  // Covers are probed server-side, but the file can be deleted inside the API's
+  // one-hour cache window. Track the *url* that failed rather than a boolean, so
+  // swapping to a different src (local image → repo cover) clears itself without
+  // an effect, and a dead cover degrades to the Monogram, never a broken icon.
+  const [failedSrc, setFailedSrc] = useState(null);
+  const cover = project.image && project.image !== failedSrc ? project.image : null;
 
   return (
     <motion.article
@@ -23,13 +31,14 @@ export const ProjectCard = ({ project }) => {
       className="group h-full flex flex-col overflow-hidden bg-card border border-border
                  hover:shadow-xl transition-shadow duration-300"
     >
-      <div className="aspect-[16/10] overflow-hidden bg-surface">
-        {project.image ? (
+      <div className="relative aspect-[16/10] overflow-hidden bg-surface">
+        {cover ? (
           <img
-            src={project.image}
+            src={cover}
             alt={project.title}
             loading="lazy"
             decoding="async"
+            onError={() => setFailedSrc(cover)}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -39,10 +48,26 @@ export const ProjectCard = ({ project }) => {
             textClassName="text-3xl"
           />
         )}
+
+        {/* Set by mergeProjects on the most recently pushed repo — so it only
+            ever appears once, and only when GitHub data actually arrived. */}
+        {project.latest && (
+          <motion.span
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+            className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1
+                       rounded-full bg-background/80 backdrop-blur-md border border-primary/30
+                       text-[10px] font-semibold uppercase tracking-[0.12em] text-primary"
+          >
+            <Sparkles size={10} aria-hidden="true" />
+            Latest
+          </motion.span>
+        )}
       </div>
 
       <div className="flex flex-col flex-1 p-6 gap-4">
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1.5 empty:hidden">
           {project.tags.map((tag) => (
             <span
               key={tag}
@@ -55,7 +80,11 @@ export const ProjectCard = ({ project }) => {
 
         <div className="flex-1">
           <h3 className="font-semibold text-foreground mb-1.5">{project.title}</h3>
-          <p className="text-sm text-muted leading-relaxed">{project.summary}</p>
+          {/* Uncurated repos with no GitHub description have nothing to say
+              here — render nothing rather than an empty paragraph. */}
+          {project.summary && (
+            <p className="text-sm text-muted leading-relaxed">{project.summary}</p>
+          )}
         </div>
 
         {/* Live GitHub badges. Height is reserved so nothing shifts when they

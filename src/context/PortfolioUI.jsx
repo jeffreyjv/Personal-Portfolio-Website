@@ -2,11 +2,10 @@ import { useCallback, useMemo, useState } from "react";
 import { sectionIds } from "@/data/nav";
 import { useScrollSpy } from "@/hooks/use-scroll-spy";
 import { scrollToSection } from "@/lib/scroll";
-import { ALL_TAG, PortfolioUIContext } from "./portfolio-ui";
+import { PortfolioUIContext } from "./portfolio-ui";
 
 /**
- * The small amount of state more than one component needs: the projects filter
- * (driven by both the chip row and the command palette), theme, palette
+ * The small amount of state more than one component needs: theme, palette
  * visibility, and section navigation — shared so scroll-spy stays correct no
  * matter how you navigate.
  *
@@ -14,7 +13,6 @@ import { ALL_TAG, PortfolioUIContext } from "./portfolio-ui";
  * consumers never means more observers.
  */
 export const PortfolioUIProvider = ({ children }) => {
-  const [filter, setFilter] = useState(ALL_TAG);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [isDark, setIsDark] = useState(() =>
     document.documentElement.classList.contains("dark")
@@ -43,19 +41,8 @@ export const PortfolioUIProvider = ({ children }) => {
     });
   }, []);
 
-  const filterAndScroll = useCallback(
-    (tag) => {
-      setFilter(tag);
-      goToSection("projects");
-    },
-    [goToSection]
-  );
-
   const value = useMemo(
     () => ({
-      filter,
-      setFilter,
-      filterAndScroll,
       isDark,
       toggleTheme,
       activeSection: active,
@@ -63,7 +50,7 @@ export const PortfolioUIProvider = ({ children }) => {
       paletteOpen,
       setPaletteOpen,
     }),
-    [filter, filterAndScroll, isDark, toggleTheme, active, goToSection, paletteOpen]
+    [isDark, toggleTheme, active, goToSection, paletteOpen]
   );
 
   return (

@@ -6,8 +6,6 @@ import { createContext, useContext } from "react";
  */
 export const PortfolioUIContext = createContext(null);
 
-export const ALL_TAG = "All";
-
 export function usePortfolioUI() {
   const ctx = useContext(PortfolioUIContext);
   if (!ctx) throw new Error("usePortfolioUI must be used within PortfolioUIProvider");

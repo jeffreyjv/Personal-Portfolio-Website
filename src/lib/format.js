@@ -34,6 +34,27 @@ export function initials(text = "") {
     .join("");
 }
 
+/* Segments that should read as acronyms rather than Title Case, so a repo slug
+   like "pain-point-ai-backend" doesn't render as "Pain Point Ai Backend". */
+const ACRONYMS = new Set([
+  "ai", "api", "aws", "cd", "cfa", "ci", "cli", "css", "db", "html",
+  "id", "ios", "js", "ml", "os", "sql", "ui", "ux",
+]);
+
+/** "pain-point-ai-backend" → "Pain Point AI Backend". Used as the display title
+ *  for GitHub repos that have no curated entry in projects.json. */
+export function humanizeRepoName(name = "") {
+  return name
+    .split(/[-_.\s]+/)
+    .filter(Boolean)
+    .map((w) =>
+      ACRONYMS.has(w.toLowerCase())
+        ? w.toUpperCase()
+        : w[0].toUpperCase() + w.slice(1)
+    )
+    .join(" ");
+}
+
 /** "2026-05-14T…" → "May 2026", for the GitHub "updated" badge. */
 export function formatMonthYear(iso) {
   if (!iso) return null;

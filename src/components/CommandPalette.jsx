@@ -11,13 +11,13 @@ import {
   Moon,
   Phone,
   Sun,
-  Tag,
 } from "lucide-react";
 import projectsData from "@/data/projects.json";
 import { navItems } from "@/data/nav";
 import { profile } from "@/data/profile";
-import { usePortfolioUI, ALL_TAG } from "@/context/portfolio-ui";
-import { dedupeTags } from "@/lib/tag-map";
+import { usePortfolioUI } from "@/context/portfolio-ui";
+import { useGitHubRepos } from "@/hooks/use-github-repos";
+import { mergeProjects } from "@/lib/merge-projects";
 
 const itemClass =
   "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-foreground cursor-pointer " +
@@ -31,12 +31,15 @@ const groupClass =
   "[&_[cmdk-group-heading]]:text-muted";
 
 export default function CommandPalette({ open, onOpenChange }) {
-  const { goToSection, toggleTheme, isDark, filterAndScroll } = usePortfolioUI();
+  const { goToSection, toggleTheme, isDark } = usePortfolioUI();
 
-  const projects = projectsData.projects;
-  const tags = useMemo(
-    () => dedupeTags(projects.flatMap((p) => p.tags ?? [])).sort(),
-    [projects]
+  // Same list the Projects grid shows, so every repo is reachable from here.
+  // The hook is served from its sessionStorage cache, so opening the palette
+  // never costs a second fetch.
+  const { repos } = useGitHubRepos();
+  const projects = useMemo(
+    () => mergeProjects(projectsData.projects, repos),
+    [repos]
   );
 
   const run = (fn) => () => {
@@ -59,7 +62,7 @@ export default function CommandPalette({ open, onOpenChange }) {
       label="Command menu"
       overlayClassName="fixed inset-0 z-[100] bg-background/60 backdrop-blur-sm
                         data-[state=open]:animate-fade-in"
-      contentClassName="fixed z-[101] left-1/2 top-[18vh] w-[min(92vw,560px)] -translate-x-1/2
+      contentClassName="fixed z-[101] left-1/2 top-[18vh] w-[min(94vw,680px)] -translate-x-1/2
                         rounded-2xl bg-card border border-border shadow-2xl overflow-hidden
                         data-[state=open]:animate-fade-in"
     >
@@ -92,18 +95,20 @@ export default function CommandPalette({ open, onOpenChange }) {
         </Command.Group>
 
         <Command.Group heading="Projects" className={groupClass}>
-          {projects.map((p) => (
-            <Command.Item
-              key={p.slug}
-              value={`${p.title} ${(p.tags ?? []).join(" ")}`}
-              className={itemClass}
-              onSelect={openUrl(`https://github.com/${p.repo}`)}
-            >
-              <Github size={15} />
-              <span className="flex-1">{p.title}</span>
-              <span className="text-xs text-muted">Source</span>
-            </Command.Item>
-          ))}
+          {projects
+            .filter((p) => p.githubUrl)
+            .map((p) => (
+              <Command.Item
+                key={p.slug}
+                value={`${p.title} ${(p.tags ?? []).join(" ")}`}
+                className={itemClass}
+                onSelect={openUrl(p.githubUrl)}
+              >
+                <Github size={15} />
+                <span className="flex-1">{p.title}</span>
+                <span className="text-xs text-muted">Source</span>
+              </Command.Item>
+            ))}
           {projects
             .filter((p) => p.demoUrl)
             .map((p) => (
@@ -118,26 +123,6 @@ export default function CommandPalette({ open, onOpenChange }) {
                 <span className="text-xs text-muted">Live demo</span>
               </Command.Item>
             ))}
-        </Command.Group>
-
-        <Command.Group heading="Filter" className={groupClass}>
-          <Command.Item
-            className={itemClass}
-            onSelect={run(() => filterAndScroll(ALL_TAG))}
-          >
-            <Tag size={15} />
-            Show all projects
-          </Command.Item>
-          {tags.map((tag) => (
-            <Command.Item
-              key={tag}
-              className={itemClass}
-              onSelect={run(() => filterAndScroll(tag))}
-            >
-              <Tag size={15} />
-              Show {tag} projects
-            </Command.Item>
-          ))}
         </Command.Group>
 
         <Command.Group heading="Actions" className={groupClass}>

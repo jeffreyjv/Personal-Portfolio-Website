@@ -24,8 +24,11 @@ const contactItems = [
 
 export const ContactSection = () => {
   return (
-    <section id="contact" className="py-32 px-6">
-      <div className="max-w-3xl mx-auto text-center">
+    <section id="contact" className="section-y">
+      {/* Same measure as every other section — this used to be max-w-3xl, which
+          made the contact cards visibly narrower than the project grid above.
+          The prose below keeps its own max-w-md so the line length still reads. */}
+      <div className="section-shell text-center">
         <ScrollReveal>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted mb-3">
             Say Hello

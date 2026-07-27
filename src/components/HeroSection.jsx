@@ -59,7 +59,11 @@ export const HeroSection = () => {
     <section
       ref={heroRef}
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-12 text-center"
+      // min-h-svh, not min-h-screen: 100vh on mobile is the *tall* viewport
+      // (URL bar collapsed), so the hero overflowed the screen on load and
+      // changed height mid-scroll. svh is the stable small viewport.
+      className="relative min-h-svh flex flex-col items-center justify-center
+                 section-shell pt-12 text-center"
     >
       <motion.div
         className="flex flex-col items-center"

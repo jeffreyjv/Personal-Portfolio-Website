@@ -24,7 +24,19 @@ React 19 + Vite 7 + Tailwind CSS v4 + Framer Motion. Deployed to Vercel at `jeff
 - All config is in `src/index.css` via `@theme`, `@layer base`, `@utility`. There is no `tailwind.config.js` — v4 is CSS-first.
 - Dark mode is class-based (`@custom-variant dark`). **Dark is the default.** The `.dark` class is applied by a blocking script in `index.html` *before first paint* — do not move theme detection into an effect, that reintroduces the light-mode flash.
 - Color tokens: `--color-background`, `--color-surface`, `--color-foreground`, `--color-muted`, `--color-primary`, `--color-card`, `--color-border`, consumed as `bg-background`, `text-muted`, etc.
-- Custom utilities: `apple-btn`, `apple-btn-primary`, `apple-btn-secondary`.
+- Custom utilities: `apple-btn`, `apple-btn-primary`, `apple-btn-secondary`, and the page shell below.
+
+### Page shell — don't size sections by hand
+
+Three tokens in `:root` drive every section's geometry: `--gutter` (fluid 20→40px), `--section-y` (fluid 64→128px) and `--measure` (64rem content column). Two utilities consume them:
+
+- **`section-y`** goes on the `<section>`, so a full-bleed background still spans the viewport.
+- **`section-shell`** goes on the div inside it — and on the Navbar's inner div, so the brand sits on the same left edge as section content at every width. Gutters sit *outside* `--measure`, so the content column is exactly 64rem once there's room.
+- **`bleed-x`** cancels the shell's gutter for edge-to-edge rows, then re-pads its own contents.
+
+Never reintroduce a hardcoded `py-32 px-6` + `max-w-5xl` on a section: that was the bug where each section scaled differently across screen sizes. Override per-section with `[--measure:48rem]` rather than a different container class.
+
+Hero uses **`min-h-svh`, not `min-h-screen`** — `100vh` on mobile is the tall viewport (URL bar collapsed), so the hero overflowed on load and changed height mid-scroll.
 
 ### Animation (Framer Motion)
 
@@ -47,7 +59,7 @@ All of it is hand-edited — there is no CMS and no import step.
 |---|---|
 | `skills.json` | `groups[{id,label,items[]}]` — 4 groups, `items` are plain strings |
 | `experience.json` | `items[{id,kind,role,company,location,startDate,endDate,current,description,logo}]` |
-| `projects.json` | `projects[{slug,repo,githubId,title,summary,image,tags,demoUrl,order}]` |
+| `projects.json` | `projects[{slug,repo,githubId,title,summary,image,tags,demoUrl,order}]` — enrichment only, **not** the list of what renders |
 | `nav.js`, `profile.js` | nav items, contact links |
 
 - `src/data/images.js` maps an image *filename* to its bundled URL via `import.meta.glob` — that's why `projects.json` stores `"website.png"` rather than an import. Unknown filename → `null` → `<Monogram>` placeholder.
@@ -60,8 +72,11 @@ All of it is hand-edited — there is no CMS and no import step.
 
 - **`GITHUB_TOKEN` is required in production.** Unauthenticated GitHub is 60 req/hr *per IP*, and Vercel's egress IP is shared with other tenants. Use a fine-grained PAT with Public Repositories read-only. See `.env.example`. Never `VITE_`-prefix it.
 - `vite dev` doesn't serve `api/` — the `devApi()` plugin in `vite.config.js` mounts the same handler as middleware. The handler uses the raw Node response API so it runs unmodified in both places.
-- **`projects.json` is the source of truth for what appears on the page; GitHub only decorates it.** `src/lib/merge-projects.js` matches on `githubId` first (survives repo renames), falls back to `repo`. If the API is down every card still renders with badges hidden. A curated repo that's been deleted gets `orphaned: true` and still renders.
-- Mark a repo **featured** by adding the `portfolio-featured` topic on GitHub — it then ranks first in the "More on GitHub" row.
+- **GitHub is the list; `projects.json` only enriches it.** `src/lib/merge-projects.js` returns one flat array of *every* public repo — archived repos and the `owner/owner` profile-README repo excluded, forks/private already dropped in `api/github.js`. A curated entry supplies a screenshot, hand-written summary, nicer title and tags for the repo it points at; repos with no entry get a card built from their GitHub description, topics and language, with `humanizeRepoName()` turning `pain-point-ai-backend` into "Pain Point AI Backend".
+- Matching prefers `githubId` (survives repo renames), falls back to `repo`. Curated entries GitHub didn't return still render as `orphaned`. If the API is down entirely, the curated entries render alone — the section is never blank.
+- **Card covers live in the repos, not here.** Commit an image to `.github/preview.png` (or `.webp`/`.jpg`) in any repo and it becomes that card's cover on the next cache refresh — no change to this codebase. `api/github.js` probes `raw.githubusercontent.com/{repo}/HEAD/...` with `HEAD` requests; the `HEAD` ref means it works regardless of the default branch name. Those probes hit a plain CDN, so they **don't** count against the API rate limit, and all repos are probed concurrently under a 4s whole-phase budget that degrades to "no covers" rather than failing the response. A repo cover outranks a bundled `projects.json` image; `ProjectCard` tracks the failed *url* so a cover deleted inside the cache window falls back to `<Monogram>` instead of a broken icon.
+- **Ordering:** the `portfolio-featured` topic pins a repo to the front, then most-recently-pushed first. Dateless orphans sink to the bottom on their curated `order`. The single freshest card gets `latest: true` and shows a "Latest" badge.
+- **There is no tag filter.** The chip row and the palette's "Filter" group were removed — the section lists everything. `collectTags` and the shared `filter` state went with them.
 - Run `vercel dev` once before deploying; `vite build` gives *zero* syntax checking on `api/`.
 
 **Note on LinkedIn:** there is no live LinkedIn API for skills or positions — the official API exposes only name, photo, email and locale, and scraping violates their User Agreement. Skills and experience are therefore maintained by hand in the JSON files above.
@@ -70,7 +85,9 @@ All of it is hand-edited — there is no CMS and no import step.
 
 ⌘K / Ctrl+K / `/`. `cmdk` + Radix Dialog, **lazy-loaded** (`CommandPaletteHost`) so it stays out of the initial chunk. Focus trap, Esc, arrow keys, focus restore and ARIA all come from the library — don't reimplement them.
 
-Cross-component state (projects filter, theme, section navigation, palette visibility) lives in `src/context/PortfolioUI.jsx`. The hook and constants are in `src/context/portfolio-ui.js` — kept separate so the provider file exports only components, which React Fast Refresh requires.
+The palette's Projects group is built from the same `mergeProjects()` list the grid uses, so every repo is reachable from it. `useGitHubRepos()` is served from its sessionStorage cache there, so opening the palette costs no extra fetch.
+
+Cross-component state (theme, section navigation, palette visibility) lives in `src/context/PortfolioUI.jsx`. The hook and constants are in `src/context/portfolio-ui.js` — kept separate so the provider file exports only components, which React Fast Refresh requires.
 
 The single scroll-spy `IntersectionObserver` lives in that provider, so adding consumers never adds observers. Anything that scrolls programmatically must go through `goToSection()`, which locks the observer during the scroll — otherwise the active-link indicator strobes through every section on the way.
 

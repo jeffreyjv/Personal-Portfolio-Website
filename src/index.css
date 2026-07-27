@@ -30,6 +30,15 @@
 
 @layer base {
   :root {
+    /* Page rhythm. Every section derives its gutter and vertical padding from
+       these two, so nothing is sized in isolation and the whole page scales as
+       one system. Both are fluid: a fixed py-32/px-6 eats a phone screen and
+       looks cramped on a 27" display. Change them here, not per-section. */
+    --gutter: clamp(1.25rem, 4vw, 2.5rem);
+    --section-y: clamp(4rem, 9vw, 8rem);
+    /* Content column, gutters excluded — the old max-w-5xl. */
+    --measure: 64rem;
+
     --background: 0 0% 100%;
     --surface: 240 5% 96%;
     --foreground: 240 2% 11%;
@@ -79,6 +88,30 @@
     outline-offset: 2px;
     border-radius: 4px;
   }
+}
+
+/* Page shell — the single source of section sizing.
+   `section-y` on the <section> (so a full-bleed background still spans the
+   viewport), `section-shell` on the div inside it (so the content column lines
+   up with every other section, and with the navbar, at every width). */
+@utility section-y {
+  padding-block: var(--section-y);
+}
+
+@utility section-shell {
+  width: 100%;
+  /* Gutters sit outside the measure, so the content column is exactly
+     --measure once there's room for it — not --measure minus padding. */
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Cancels the shell's gutter so a row can run edge-to-edge, then re-pads its
+   own contents — used by the mobile filter chips. Pairs with md:mx-0 md:px-0. */
+@utility bleed-x {
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
 }
 
 /* Apple-style buttons */
