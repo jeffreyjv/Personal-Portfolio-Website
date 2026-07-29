@@ -41,19 +41,26 @@ export const Navbar = () => {
       )}
     >
       {/* section-shell, so the brand sits on the same left edge as every
-          section's content instead of drifting at mid widths. */}
-      <div className="section-shell h-12 flex items-center justify-between">
+          section's content instead of drifting at mid widths.
+
+          A three-column grid, not `justify-between`: the search button made the
+          right cluster far wider than the brand, and flex spacing centres the
+          *gaps*, not the middle group — so the links sat visibly left of centre.
+          The two `1fr` side tracks are equal whenever there's room, which puts
+          the links on the page's true centre line; when there isn't, they give
+          way to their content instead of overlapping it. */}
+      <div className="section-shell h-12 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
         {/* Brand */}
         <a
           href="#hero"
           onClick={(e) => go(e, "hero")}
-          className="text-sm font-semibold text-foreground tracking-tight"
+          className="justify-self-start text-sm font-semibold text-foreground tracking-tight"
         >
           Jeffrey Vincent
         </a>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-7">
+        <div className="hidden md:flex items-center gap-7 justify-self-center">
           {navItems.map((item) => {
             const isActive = active === item.id;
             return (
@@ -81,7 +88,7 @@ export const Navbar = () => {
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-1">
+        <div className="col-start-3 flex items-center justify-self-end gap-1">
           {/* A hidden palette is a palette nobody uses — advertise the shortcut. */}
           <button
             onClick={() => setPaletteOpen(true)}
