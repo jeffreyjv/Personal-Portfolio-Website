@@ -6,39 +6,71 @@
       "items": [
         "React",
         "Vue",
-        "HTML / CSS",
-        "JavaScript"
+        "TypeScript",
+        "JavaScript",
+        "Tailwind CSS",
+        "HTML / CSS"
       ]
     },
     {
       "id": "backend",
       "label": "Backend",
       "items": [
+        "Python",
         "FastAPI",
         "Flask",
+        "Node.js",
         "GraphQL",
-        "Python"
+        "REST APIs",
+        "SQL",
+        "Apache Kafka"
       ]
     },
     {
-      "id": "tools",
-      "label": "Tools & DevOps",
+      "id": "cloud",
+      "label": "Cloud & Infrastructure",
       "items": [
-        "Git",
-        "GitHub",
+        "AWS",
+        "AWS Lambda",
+        "Amazon ECS",
+        "Amazon S3",
+        "DynamoDB",
+        "Terraform",
         "Docker",
+        "Microservices"
+      ]
+    },
+    {
+      "id": "devsecops",
+      "label": "DevSecOps",
+      "items": [
+        "CI/CD",
         "GitLab",
-        "VS Code"
+        "SAST",
+        "Cybersecurity",
+        "Shell Scripting",
+        "Dynatrace",
+        "Automation"
+      ]
+    },
+    {
+      "id": "ai",
+      "label": "AI Engineering",
+      "items": [
+        "Generative AI",
+        "Model Context Protocol",
+        "Claude Code",
+        "AI-Assisted Development"
       ]
     },
     {
       "id": "certifications",
       "label": "Certifications",
       "items": [
-        "AWS Solutions Architect",
-        "Azure Fundamentals",
-        "GitLab Security Specialist",
-        "GitLab CI/CD Associate"
+        "AWS Certified Solutions Architect – Associate",
+        "GitLab Certified CI/CD Associate",
+        "GitLab Certified Security Specialist",
+        "Microsoft Certified: Azure Fundamentals"
       ]
     }
   ]

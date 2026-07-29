@@ -1,27 +1,35 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { ScrollReveal } from "./ScrollReveal";
+import { RevealText } from "./RevealText";
 import { ProjectCard } from "./ProjectCard";
 import projectsData from "@/data/projects.json";
 import { useGitHubRepos } from "@/hooks/use-github-repos";
 import { mergeProjects } from "@/lib/merge-projects";
+import { useSectionScroll } from "@/hooks/use-section-scroll";
 
 export const ProjectsSection = () => {
   const { repos, status } = useGitHubRepos();
 
   const cards = useMemo(() => mergeProjects(projectsData.projects, repos), [repos]);
 
+  const sectionRef = useRef(null);
+  const { y, scale } = useSectionScroll(sectionRef);
+
   return (
-    <section id="projects" className="section-y bg-surface">
-      <div className="section-shell">
+    // section-tint, not bg-surface — see AboutSection.
+    <section ref={sectionRef} id="projects" className="section-page section-tint">
+      <motion.div className="section-shell" style={{ y, scale }}>
         <ScrollReveal>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted mb-3">
             Work
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-5">
-            All Projects
-          </h2>
+        </ScrollReveal>
+        <RevealText className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-5">
+          All Projects
+        </RevealText>
+        <ScrollReveal delay={80}>
           <p className="text-base text-muted max-w-lg mb-10 leading-relaxed">
             Every public repository, pulled live from GitHub and ordered by most
             recent activity.
@@ -63,7 +71,7 @@ export const ProjectsSection = () => {
             </a>
           </div>
         </ScrollReveal>
-      </div>
+      </motion.div>
     </section>
   );
 };

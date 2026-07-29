@@ -1,22 +1,28 @@
+import { useRef } from "react";
 import { motion } from "motion/react";
 import { ScrollReveal } from "./ScrollReveal";
+import { RevealText } from "./RevealText";
 import skillsData from "@/data/skills.json";
 import { VIEWPORT, popIn, staggerContainer } from "@/lib/motion";
+import { useSectionScroll } from "@/hooks/use-section-scroll";
 
 const skillGroups = skillsData.groups;
 
 export const SkillsSection = () => {
+  const sectionRef = useRef(null);
+  const { y, scale } = useSectionScroll(sectionRef);
+
   return (
-    <section id="skills" className="section-y">
-      <div className="section-shell">
+    <section ref={sectionRef} id="skills" className="section-page">
+      <motion.div className="section-shell" style={{ y, scale }}>
         <ScrollReveal>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted mb-3">
             Expertise
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-16">
-            Skills
-          </h2>
         </ScrollReveal>
+        <RevealText className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-10 md:mb-14">
+          Skills
+        </RevealText>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {skillGroups.map((group, i) => (
@@ -52,7 +58,7 @@ export const SkillsSection = () => {
             </ScrollReveal>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

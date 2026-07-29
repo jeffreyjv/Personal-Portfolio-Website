@@ -2,6 +2,7 @@ import { Navbar } from "../components/Navbar.jsx";
 import { HeroSection } from "../components/HeroSection.jsx";
 import { AboutSection } from "../components/AboutSection.jsx";
 import { SkillsSection } from "../components/SkillsSection.jsx";
+import { TechMarquee } from "../components/TechMarquee.jsx";
 import { ProjectsSection } from "../components/ProjectsSection.jsx";
 import { ContactSection } from "../components/ContactSection.jsx";
 import { StarBackground } from "@/components/StarBackground";
@@ -28,6 +29,9 @@ const HomeContent = () => {
         <HeroSection />
         <AboutSection />
         <SkillsSection />
+        {/* Deliberately not a section: a short decorative band between the two
+            densest parts of the page. It has no id, so scroll-spy ignores it. */}
+        <TechMarquee />
         <ProjectsSection />
         <ContactSection />
       </main>

@@ -35,9 +35,24 @@
        one system. Both are fluid: a fixed py-32/px-6 eats a phone screen and
        looks cramped on a 27" display. Change them here, not per-section. */
     --gutter: clamp(1.25rem, 4vw, 2.5rem);
-    --section-y: clamp(4rem, 9vw, 8rem);
+    /* Vertical padding tracks the *shorter* of the two axes. Keyed to width
+       alone, a 1280x800 laptop got the same 115px bands as a 1280x1600 portrait
+       display, which is what pushed sections past a single page on short-wide
+       screens. `svh` (not `vh`) so mobile URL-bar collapse can't reflow it. */
+    --section-y: clamp(4rem, min(9vw, 12svh), 8rem);
     /* Content column, gutters excluded — the old max-w-5xl. */
     --measure: 64rem;
+    /* Fixed navbar height (h-12). Short-viewport math reads it. */
+    --nav-h: 3rem;
+    /* Sections are sized by their content plus --section-y, not forced to a
+       viewport. Forcing 100svh and centering inside it is a *snapping* idiom: it
+       exists so every snap target fills the screen, and it only works because
+       snapping never lets you rest between two of them. Free-scrolling through
+       it, a 511px About section inside a 1262px page put 721px of nothing
+       between its last line and the next section's first — over half a screen of
+       void, twice per section. The shared --section-y band is what makes the
+       page scale as one system; the viewport height never was. */
+    --page-min-h: auto;
 
     --background: 0 0% 100%;
     --surface: 240 5% 96%;
@@ -66,11 +81,28 @@
   }
 
   html {
-    @apply scroll-smooth;
+    /* Deliberately NOT `scroll-smooth`. Each wheel tick started a new
+       smooth-scroll animation that was still running when the next arrived, so
+       one flick sailed past a whole section (hero straight to skills). Anything
+       that scrolls programmatically asks for `behavior: "smooth"` explicitly in
+       src/lib/scroll.js, which is the only place it's actually wanted. */
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    /* There is deliberately NO `scroll-snap-type` here. Mandatory snapping used
+       to live on this element to stop a short flick parking the page half on one
+       section and half on the next — but it captured every wheel tick and
+       trackpad gesture to do it, and the resistance was worse than the problem.
+
+       What replaces it is motion, not scroll capture: sections are driven
+       continuously by scroll position (src/hooks/use-section-scroll.js), the
+       hero recedes and blurs as it leaves, and the surface tints below fade in
+       and out rather than butting up against hard edges. Every in-between scroll
+       position is therefore a composed frame, so there is no longer a "wrong"
+       place to stop and nothing needs to drag the page off one. */
   }
+
 
   body {
     @apply bg-background text-foreground;
@@ -78,9 +110,11 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Anchor targets must clear the fixed navbar (h-12 = 3rem) */
+  /* Anchor targets land flush with the top of the viewport. The navbar doesn't
+     need clearing: `--section-y` (4rem minimum) already exceeds its 3rem, so a
+     scroll-margin would only leave a sliver of the previous section on screen. */
   section[id] {
-    scroll-margin-top: 4.5rem;
+    scroll-margin-top: 0;
   }
 
   :where(a, button, [tabindex]):focus-visible {
@@ -91,11 +125,45 @@
 }
 
 /* Page shell — the single source of section sizing.
-   `section-y` on the <section> (so a full-bleed background still spans the
+   `section-page` on the <section> (so a full-bleed background still spans the
    viewport), `section-shell` on the div inside it (so the content column lines
    up with every other section, and with the navbar, at every width). */
+
+/* The vertical rhythm primitive. `section-page` composes it; use it alone only
+   for something that deliberately isn't a page. */
 @utility section-y {
   padding-block: var(--section-y);
+}
+
+/* Every section gets this, so they all read as the same unit regardless of how
+   much content they hold — that's the fix for "every section is a different
+   size". The uniformity comes from the shared `--section-y` band and
+   `--measure` column, not from a forced height: `--page-min-h` is `auto`, so a
+   section is exactly as tall as it needs to be. See the token for why.
+
+   The flex centering is kept for the hero, which *does* override the height to
+   fill the screen and needs its content in the middle of it. */
+@utility section-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--page-min-h);
+  padding-block: var(--section-y);
+}
+
+/* A surface band that dissolves at both ends instead of butting up against the
+   sections above and below. With snapping gone you park on those boundaries
+   constantly, and a hard horizontal edge is what made the page read as a stack
+   of separate pages rather than one continuous scroll. The fade is generous on
+   purpose — the flat middle still carries text contrast. */
+@utility section-tint {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    hsl(var(--surface)) 12%,
+    hsl(var(--surface)) 88%,
+    transparent 100%
+  );
 }
 
 @utility section-shell {

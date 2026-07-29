@@ -1,5 +1,9 @@
+import { useRef } from "react";
 import { Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { motion } from "motion/react";
 import { ScrollReveal } from "./ScrollReveal";
+import { RevealText } from "./RevealText";
+import { useSectionScroll } from "@/hooks/use-section-scroll";
 
 const contactItems = [
   {
@@ -23,26 +27,31 @@ const contactItems = [
 ];
 
 export const ContactSection = () => {
+  const sectionRef = useRef(null);
+  const { y, scale } = useSectionScroll(sectionRef);
+
   return (
-    <section id="contact" className="section-y">
+    <section ref={sectionRef} id="contact" className="section-page">
       {/* Same measure as every other section — this used to be max-w-3xl, which
           made the contact cards visibly narrower than the project grid above.
           The prose below keeps its own max-w-md so the line length still reads. */}
-      <div className="section-shell text-center">
+      <motion.div className="section-shell text-center" style={{ y, scale }}>
         <ScrollReveal>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted mb-3">
             Say Hello
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-5">
-            Let's Connect
-          </h2>
-          <p className="text-base text-muted max-w-md mx-auto mb-16 leading-relaxed">
+        </ScrollReveal>
+        <RevealText className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-5">
+          Let's Connect
+        </RevealText>
+        <ScrollReveal delay={80}>
+          <p className="text-base text-muted max-w-md mx-auto mb-10 md:mb-14 leading-relaxed">
             Always open to new opportunities, collaborations, or just a good conversation.
           </p>
         </ScrollReveal>
 
         {/* Contact info row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 md:mb-10">
           {contactItems.map((item, i) => (
             <ScrollReveal key={item.label} delay={i * 80}>
               <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-card border border-border hover:shadow-md transition-shadow duration-300">
@@ -87,14 +96,7 @@ export const ContactSection = () => {
             </a>
           </div>
         </ScrollReveal>
-
-        {/* Footer */}
-        <ScrollReveal delay={300}>
-          <p className="text-xs text-muted mt-16">
-            © {new Date().getFullYear()} Jeffrey Vincent. All rights reserved.
-          </p>
-        </ScrollReveal>
-      </div>
+      </motion.div>
     </section>
   );
 };

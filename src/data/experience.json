@@ -1,39 +1,39 @@
 {
   "items": [
     {
+      "id": "ally-financial-senior-software-engineer",
+      "kind": "work",
+      "role": "Senior Software Engineer",
+      "company": "Ally Financial",
+      "location": "Charlotte, NC",
+      "startDate": "2026-06",
+      "endDate": null,
+      "current": true,
+      "description": "Fraud & Anti-Money Laundering — full-stack engineering on detection systems.",
+      "logo": "ally.png"
+    },
+    {
       "id": "ally-financial-cloud-engineer",
       "kind": "work",
       "role": "Cloud Engineer",
       "company": "Ally Financial",
-      "location": null,
-      "startDate": null,
-      "endDate": null,
-      "current": true,
-      "description": "Full-stack software engineer on the Cloud Reliability Engineering Team.",
+      "location": "Charlotte, NC",
+      "startDate": "2025-05",
+      "endDate": "2026-06",
+      "current": false,
+      "description": "Cloud Reliability Engineering — built an internal hybrid cloud portal serving 1,000+ engineers.",
       "logo": "ally.png"
     },
     {
-      "id": "ally-financial-devsecops-engineer",
+      "id": "ally-financial-software-engineer",
       "kind": "work",
-      "role": "DevSecOps Engineer",
+      "role": "Software Engineer",
       "company": "Ally Financial",
-      "location": null,
-      "startDate": null,
-      "endDate": null,
+      "location": "Charlotte, NC",
+      "startDate": "2023-07",
+      "endDate": "2025-05",
       "current": false,
-      "description": "Enterprise DevSecOps Team — focused on cybersecurity & GitLab pipelines.",
-      "logo": "ally.png"
-    },
-    {
-      "id": "ally-financial-devsecops-intern",
-      "kind": "work",
-      "role": "DevSecOps Intern",
-      "company": "Ally Financial",
-      "location": null,
-      "startDate": null,
-      "endDate": null,
-      "current": false,
-      "description": "Created the DevSecOps Portal, the beginning of an internal developer platform.",
+      "description": "Enterprise DevSecOps — owned CI/CD security pipelines across 500+ applications.",
       "logo": "ally.png"
     },
     {
@@ -41,11 +41,11 @@
       "kind": "education",
       "role": "B.S. Computer Science",
       "company": "UNC Chapel Hill",
-      "location": null,
-      "startDate": null,
-      "endDate": null,
+      "location": "Chapel Hill, NC",
+      "startDate": "2019-08",
+      "endDate": "2023-05",
       "current": false,
-      "description": "Minor in Information Systems & Statistics.",
+      "description": "Minor in Statistics and Information Systems.",
       "logo": "unc.png"
     }
   ]

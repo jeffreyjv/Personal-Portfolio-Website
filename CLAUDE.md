@@ -28,15 +28,30 @@ React 19 + Vite 7 + Tailwind CSS v4 + Framer Motion. Deployed to Vercel at `jeff
 
 ### Page shell — don't size sections by hand
 
-Three tokens in `:root` drive every section's geometry: `--gutter` (fluid 20→40px), `--section-y` (fluid 64→128px) and `--measure` (64rem content column). Two utilities consume them:
+Three tokens in `:root` drive every section's geometry: `--gutter` (fluid 20→40px), `--section-y` (fluid 64→128px) and `--measure` (64rem content column). The utilities that consume them:
 
-- **`section-y`** goes on the `<section>`, so a full-bleed background still spans the viewport.
+- **`section-page`** goes on the `<section>`, so a full-bleed background still spans the viewport. Sections are **content-height** — `--page-min-h` is `auto`. Uniformity comes from the shared `--section-y` band and `--measure` column, not from a forced height. The hero is the sole exception and overrides the token with `[--page-min-h:100svh]`; don't hand that to another section (see the scrolling note below for why full-viewport sections were a snapping idiom).
+- **`section-y`** is the vertical-rhythm primitive on its own — use it for something that deliberately *isn't* a page, like `TechMarquee`. Scale it locally with `[--section-y:…]` rather than hardcoding padding.
 - **`section-shell`** goes on the div inside it — and on the Navbar's inner div, so the brand sits on the same left edge as section content at every width. Gutters sit *outside* `--measure`, so the content column is exactly 64rem once there's room.
+- **`section-tint`** is the surface band: a `--surface` fill that fades to transparent at both ends. Use it instead of `bg-surface` on a section. A flat fill draws a hard horizontal line against the transparent sections either side, and since there's no snapping you rest on those boundaries constantly.
 - **`bleed-x`** cancels the shell's gutter for edge-to-edge rows, then re-pads its own contents.
 
 Never reintroduce a hardcoded `py-32 px-6` + `max-w-5xl` on a section: that was the bug where each section scaled differently across screen sizes. Override per-section with `[--measure:48rem]` rather than a different container class.
 
 Hero uses **`min-h-svh`, not `min-h-screen`** — `100vh` on mobile is the tall viewport (URL bar collapsed), so the hero overflowed on load and changed height mid-scroll.
+
+### Scrolling — free, and kept coherent by motion rather than by snapping
+
+**There is no `scroll-snap-type`, and it should not come back.** It was there (mandatory) to stop a short flick parking the page half on one section and half on the next, but buying that meant capturing every wheel tick and trackpad gesture, and the resistance was worse than the problem it solved. `scroll-snap-align`/`scroll-snap-stop`/`snap-end` are all gone with it, and so is the forced `100svh` section height, which only worked *because* snapping never let you rest between two centered sections — free-scrolling, it was 400–700px of void per boundary.
+
+What guarantees a composed frame now is that sections are driven *continuously* by scroll position, so there is no longer a wrong place to stop:
+
+- **`useSectionScroll(ref)`** (`src/hooks/use-section-scroll.js`) — every non-hero section puts a ref on its `<section>` and spends the returned `y`/`scale` on a `motion.div` wrapping its `section-shell`. Its offset is `["start end", "start center"]`, which is height-independent on purpose: the 5-viewport Projects section and a 1-viewport section enter over the same *physical distance*. `["start end", "end start"]` would make tall sections crawl.
+- **Entry only.** Fading or shrinking a section while it's still being read is hostile. The hero is the sole exception — it blurs and recedes on the way out, because scrolling past it proves you're done.
+- **Spatial vs temporal split.** The section scrub owns `y`/`scale`; the `ScrollReveal`s inside own `opacity` and stagger. Keep it that way — it's what stops two systems writing one property.
+- `scroll-smooth` is still deliberately off on `html`; only `src/lib/scroll.js` asks for smooth behavior, and only for programmatic jumps.
+
+`useScrollSpy` is independent of all this and needs no changes.
 
 ### Animation (Framer Motion)
 
@@ -44,7 +59,8 @@ Package is **`motion`**, imported from **`motion/react`** (`framer-motion` is th
 
 - **`src/lib/motion.js` holds every shared token** — `EASE`, `DUR`, `SPRING`, `fadeUp`/`fadeIn`/`scaleIn`/`popIn`, `staggerContainer()`, `VIEWPORT`. Pull from here rather than inlining values, or the page stops feeling cohesive. `EASE` deliberately matches the CSS `cubic-bezier(0.16, 1, 0.3, 1)` the design already used.
 - **Reduced motion** is handled at two layers: `<MotionConfig reducedMotion="user">` in `App.jsx` covers all `variants`/`animate`/`layout`. It does *not* cover scroll-linked `useTransform`, infinite loops, or interval-driven text — those call `useReducedMotion()` and hard-disable (see `HeroSection`, `StarBackground`).
-- **`ScrollReveal`** is a Motion-backed shim with the original prop surface (`delay` still in **milliseconds**). Fine for prose and headings. For grids, prefer `staggerContainer` + `variants` on the parent so the motion component *is* the card — no wrapper div, real stagger.
+- **`ScrollReveal`** is a Motion-backed shim with the original prop surface (`delay` still in **milliseconds**). Fine for prose and eyebrow labels. For grids, prefer `staggerContainer` + `variants` on the parent so the motion component *is* the card — no wrapper div, real stagger.
+- **`RevealText`** is for section `<h2>`s: it word-splits its string and slides each word up from behind an `overflow-hidden` mask. It takes a **plain string only** — no element children, since it splits on spaces. That's why the hero `<h1>` doesn't use it (it has a `<br>` and a nested coloured span).
 - **Never let CSS and Motion write the same property.** Motion writes inline `transform`/`opacity`, which beats every class. When making an element a motion component, strip its `opacity-0`, `animate-[…]`, `translate-*`, `scale-*` classes. Express hover lifts as `whileHover={{ y: -4 }}`, not `hover:-translate-y-1`.
 - **Animated border radius must be an inline style** (`style={{ borderRadius: 16 }}`), not `rounded-2xl` — Motion can only counter-distort a radius it owns.
 - Desktop-only effects (hero parallax, orb drift) gate on `useIsDesktop()`: iOS resizes the viewport mid-scroll, which makes `useScroll` jump.
