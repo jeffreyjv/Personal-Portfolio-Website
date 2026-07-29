@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, Linkedin } from "lucide-react";
+import { ArrowDown, Linkedin, Youtube } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -11,6 +11,7 @@ import {
 import profpic from "../assets/profpic.jpg";
 import { EASE, fadeUp, staggerContainer } from "@/lib/motion";
 import { useIsDesktop } from "@/hooks/use-media-query";
+import { profile } from "@/data/profile";
 import { usePortfolioUI } from "@/context/portfolio-ui";
 
 const ROLES = [
@@ -184,13 +185,24 @@ export const HeroSection = () => {
               View My Work
             </a>
             <a
-              href="https://www.linkedin.com/in/jeffreyvincent-796/"
+              href={profile.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="apple-btn-secondary"
             >
               <Linkedin size={15} />
               LinkedIn
+            </a>
+            <a
+              href={profile.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="apple-btn-secondary"
+            >
+              {/* Brand red on the glyph only — the label keeps text-primary so the
+                  button still reads as a sibling of the LinkedIn one. */}
+              <Youtube size={15} className="text-[#FF0033]" />
+              YouTube
             </a>
           </motion.div>
         </motion.div>

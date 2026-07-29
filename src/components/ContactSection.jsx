@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { RevealText } from "./RevealText";
+import { AmbientOrbs, AmbientSheen } from "./Ambient";
 import { profile } from "@/data/profile";
 import { DUR, EASE, SPRING, VIEWPORT, fadeUp, staggerContainer } from "@/lib/motion";
 import { useSectionScroll } from "@/hooks/use-section-scroll";
-import { useIsDesktop } from "@/hooks/use-media-query";
 import { usePointerSpotlight } from "@/hooks/use-pointer-spotlight";
 
 /** `https://github.com/jeffreyjv` → `jeffreyjv`. Keeps the handles in one place
@@ -41,7 +41,9 @@ const CHANNELS = [
   {
     icon: Linkedin,
     label: "LinkedIn",
-    value: `in/${handle(profile.linkedin)}`,
+    // The vanity slug carries a disambiguation suffix ("-796") that reads as
+    // noise here, so this row shows the name instead of the handle.
+    value: profile.name,
     href: profile.linkedin,
     external: true,
   },
@@ -54,8 +56,8 @@ const CHANNELS = [
   },
 ];
 
-/* Two slow gradient washes inside the panel, on the same non-harmonic-duration
-   trick as StarBackground so they never re-sync into one visible pulse. */
+/* Slow gradient washes inside the panel. Durations are deliberately
+   non-harmonic — see AmbientOrbs, which owns the drift itself. */
 const AURORA = [
   {
     className: "-top-24 -left-16 w-[420px] h-[420px]",
@@ -70,6 +72,14 @@ const AURORA = [
     duration: 25,
     x: [0, -34, 22, 0],
     y: [0, -20, 16, 0],
+  },
+  {
+    className: "top-1/3 left-1/2 w-[320px] h-[320px]",
+    color: "hsl(174 70% 52%)",
+    duration: 31,
+    x: [0, -46, 30, 0],
+    y: [0, 34, -26, 0],
+    opacity: 0.14,
   },
 ];
 
@@ -185,12 +195,9 @@ const ChannelRow = ({ channel, copied, onCopy }) => {
 export const ContactSection = () => {
   const sectionRef = useRef(null);
   const { y, scale } = useSectionScroll(sectionRef);
-  const reduced = useReducedMotion();
-  const isDesktop = useIsDesktop();
 
-  // Same gate as StarBackground: these are 400px blurred gradients, and
-  // animating them on a phone is the page's biggest compositing cost.
-  const drift = !reduced && isDesktop;
+  // The reduced-motion / desktop gate for the ambient layers lives inside them
+  // now (see Ambient.jsx) rather than being re-derived per section.
 
   // One spotlight for the whole panel rather than per-row — the panel is the
   // object being lit, and four spotlights would fight at the row boundaries.
@@ -222,31 +229,14 @@ export const ContactSection = () => {
           className="relative isolate overflow-hidden border border-border bg-card
                      p-8 sm:p-10 lg:p-14 shadow-sm"
         >
-          {/* Ambient layers. Both are inert and sit under the content, which
-              carries its own stacking context via `relative`. */}
-          <div aria-hidden="true" className="absolute inset-0 -z-10 opacity-60 dark:opacity-40">
-            {AURORA.map((orb, i) => (
-              <motion.div
-                key={i}
-                className={`absolute rounded-full blur-3xl ${orb.className}`}
-                style={{
-                  background: `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`,
-                  opacity: 0.22,
-                }}
-                animate={drift ? { x: orb.x, y: orb.y, scale: [1, 1.08, 0.96, 1] } : undefined}
-                transition={
-                  drift
-                    ? {
-                        duration: orb.duration,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        times: [0, 0.33, 0.66, 1],
-                      }
-                    : undefined
-                }
-              />
-            ))}
-          </div>
+          {/* Ambient layers. All inert and under the content, which carries its
+              own stacking context via `relative`. */}
+          <AmbientOrbs orbs={AURORA} className="opacity-60 dark:opacity-40" />
+
+          {/* The panel is only 64rem wide and the aurora is concentrated in it,
+              so this stays slower and dimmer than About's. Clipped by the
+              panel's own overflow-hidden. */}
+          <AmbientSheen />
 
           {spotlit && (
             <motion.div
@@ -315,7 +305,7 @@ export const ContactSection = () => {
                   rel="noopener noreferrer"
                   className="apple-btn-secondary"
                 >
-                  Résumé
+                  Resume
                 </motion.a>
               </motion.div>
 

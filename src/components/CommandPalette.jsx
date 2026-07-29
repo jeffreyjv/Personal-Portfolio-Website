@@ -155,7 +155,7 @@ export default function CommandPalette({ open, onOpenChange }) {
           </Command.Item>
           <Command.Item className={itemClass} onSelect={openUrl(profile.resume)}>
             <Download size={15} />
-            Download résumé
+            Download resume
           </Command.Item>
         </Command.Group>
       </Command.List>
