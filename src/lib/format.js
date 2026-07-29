@@ -24,6 +24,25 @@ export function formatRange(startDate, endDate, current = false) {
   return end ? `${start} — ${end}` : start;
 }
 
+/**
+ * Whole years elapsed since a "YYYY-MM" (or "YYYY") start date.
+ *
+ * The About bio used to hardcode "3 years of experience", which silently goes
+ * stale every July. Deriving it from the earliest entry in experience.json means
+ * the one place a date is maintained is the place the number comes from.
+ */
+export function yearsSince(startDate) {
+  if (!startDate) return null;
+  const [year, month] = String(startDate).split("-");
+  const start = new Date(Number(year), month ? Number(month) - 1 : 0, 1);
+  if (Number.isNaN(start.getTime())) return null;
+  const now = new Date();
+  let years = now.getFullYear() - start.getFullYear();
+  // Not yet past the anniversary month this year → still the previous count.
+  if (now.getMonth() < start.getMonth()) years -= 1;
+  return Math.max(0, years);
+}
+
 /** Initials for the placeholder tiles used when an image or logo is missing. */
 export function initials(text = "") {
   return text

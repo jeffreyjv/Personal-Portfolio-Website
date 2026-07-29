@@ -1,0 +1,13 @@
+{
+  "lead": [
+    { "text": "Hi there! I'm " },
+    { "text": "Jeffrey Vincent", "emphasis": "primary" },
+    { "text": ", a Senior Software Engineer with over " },
+    { "text": "{years} years of experience", "emphasis": "strong" },
+    { "text": " across cloud engineering, DevSecOps and full-stack web development." }
+  ],
+  "paragraphs": [
+    "I studied Computer Science (with a minor in Statistics & Information Systems) at the University of North Carolina at Chapel Hill. I love creating elegant solutions to complex problems and am always learning new tech.",
+    "Outside of work you'll find me traveling or behind a camera lens — videography is my creative outlet."
+  ]
+}

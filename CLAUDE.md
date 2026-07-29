@@ -64,6 +64,19 @@ Package is **`motion`**, imported from **`motion/react`** (`framer-motion` is th
 - **Never let CSS and Motion write the same property.** Motion writes inline `transform`/`opacity`, which beats every class. When making an element a motion component, strip its `opacity-0`, `animate-[…]`, `translate-*`, `scale-*` classes. Express hover lifts as `whileHover={{ y: -4 }}`, not `hover:-translate-y-1`.
 - **Animated border radius must be an inline style** (`style={{ borderRadius: 16 }}`), not `rounded-2xl` — Motion can only counter-distort a radius it owns.
 - Desktop-only effects (hero parallax, orb drift) gate on `useIsDesktop()`: iOS resizes the viewport mid-scroll, which makes `useScroll` jump.
+- **Motion can't interpolate `hsl(var(--token))`** — it can't parse the value, so the animation snaps instead of transitioning. To animate between two themed colors, stack two elements and animate the top one's *opacity*, letting classes supply the colors. `Timeline`'s dots do this.
+
+### About — sticky column + scroll-drawn rail
+
+`AboutSection` is the one section whose two columns move at different speeds: the left (heading, bio, buttons) is `lg:sticky lg:top-[calc(var(--nav-h)+3rem)]` and pins while `Timeline` scrolls past it. Three things keep that working:
+
+- **No `items-start` on the grid.** It collapses each column to its content height, which leaves the sticky column no track to slide along. The stick is scoped with `lg:self-start` on the column itself instead.
+- **`section-shell`'s Motion transform is `none` at rest** — verified, not assumed. A transformed ancestor would become the sticky containing block. `useSectionScroll` only writes a transform during entry, and it's settled before the sticky region matters, so `{ y, scale }` can stay on `section-shell` here like every other section.
+- **`--nav-h`, not a magic number**, for the sticky offset — the navbar height is a token.
+
+`Timeline` (`src/components/Timeline.jsx`) groups `experience.json` on its `kind` field, one rail per group so the fill restarts at each label rather than running through it. The rail is two absolutely-positioned lines sharing a `RAIL_INSET` constant: a `bg-border` track and a `bg-primary` fill whose `scaleY` is scroll-driven. It gates on `!useReducedMotion() && useIsDesktop()` itself and falls back to a **constant `1`** — off means "already drawn", never "invisible".
+
+`usePointerSpotlight` (`src/hooks/use-pointer-spotlight.js`) is the cursor glow on timeline cards. Position lives in **motion values, never React state** — state would re-render every card on every mousemove. Gated on `useHasFinePointer()` (no cursor to follow on touch). Note the gradient syntax is `circle <len> at`, not `<len> circle at`; Chrome tolerates the latter, other engines drop it.
 
 ### Data layer
 
@@ -76,10 +89,12 @@ All of it is hand-edited — there is no CMS and no import step.
 | `skills.json` | `groups[{id,label,items[]}]` — 4 groups, `items` are plain strings |
 | `experience.json` | `items[{id,kind,role,company,location,startDate,endDate,current,description,logo}]` |
 | `projects.json` | `projects[{slug,repo,githubId,title,summary,image,tags,demoUrl,order}]` — enrichment only, **not** the list of what renders |
+| `about.json` | `lead[{text,emphasis?}]` — segments, so the styled spans survive — plus `paragraphs[]` |
 | `nav.js`, `profile.js` | nav items, contact links |
 
 - `src/data/images.js` maps an image *filename* to its bundled URL via `import.meta.glob` — that's why `projects.json` stores `"website.png"` rather than an import. Unknown filename → `null` → `<Monogram>` placeholder.
 - Dates are `"YYYY-MM"` or `"YYYY"`; `formatRange()` in `src/lib/format.js` renders them and returns `null` when there's no start date, so undated entries simply show no range.
+- `about.json`'s lead carries a `{years}` placeholder, filled by `yearsSince()` from the earliest `kind !== "education"` start date in `experience.json`. Don't write the number down — the hardcoded "3 years" it replaced went stale every July.
 - `demoUrl: null` means "no demo" — the old `"#"` sentinel is gone.
 
 ### GitHub integration

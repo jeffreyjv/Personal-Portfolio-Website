@@ -22,3 +22,10 @@ export function useMediaQuery(query) {
 }
 
 export const useIsDesktop = () => useMediaQuery("(min-width: 768px)");
+
+/**
+ * A real pointer, not a touchscreen. Gates hover-tracking effects (the timeline
+ * card spotlight) — on touch there is no cursor to follow, and the pointermove
+ * handler would only fire mid-tap.
+ */
+export const useHasFinePointer = () => useMediaQuery("(pointer: fine)");
