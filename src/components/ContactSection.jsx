@@ -219,7 +219,21 @@ export const ContactSection = () => {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className="section-page">
+    // The one section besides the hero that overrides --page-min-h, and for a
+    // structural reason rather than a stylistic one: this is the last section,
+    // so nothing scrolls in behind it. Content-height, it was 653px in an 861px
+    // viewport — shorter than the screen at the end of the document, which means
+    // the page bottoms out 208px before its top ever reaches the top of the
+    // viewport. You could never actually scroll to Contact: the tail of Projects
+    // (the "View all on GitHub" button) stayed jammed under the navbar and the
+    // card sat low and off-centre. min-height only ever grows a section, so on a
+    // short viewport where the content is already taller than the screen this
+    // does nothing — and there's no shortfall to fix in that case anyway.
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="section-page [--page-min-h:100svh]"
+    >
       <motion.div className="section-shell" style={{ y, scale }}>
         <motion.div
           {...handlers}

@@ -89,7 +89,11 @@ export const AboutSection = () => {
       id="about"
       className="relative isolate section-page section-tint"
     >
-      <AmbientOrbs orbs={AURORA} className="opacity-100 dark:opacity-80" />
+      {/* fadeEdges because this is a full-bleed band, not a panel: the orbs
+          overhang the section by design and AmbientOrbs' clip would otherwise
+          shear them flat, drawing a hard line at the hero/about and
+          about/skills seams. See Ambient.jsx. */}
+      <AmbientOrbs orbs={AURORA} className="opacity-100 dark:opacity-80" fadeEdges />
       {/* Wider and quicker than Contact's — it has a whole band to cross rather
           than a 64rem panel, so the same 13s would read as a slow smear. */}
       <AmbientSheen
@@ -97,6 +101,7 @@ export const AboutSection = () => {
         tint="via-primary/[0.09]"
         duration={9}
         repeatDelay={4}
+        fadeEdges
       />
       <motion.div className="section-shell" style={{ y, scale }}>
         {/* No `items-start` here on purpose: it collapses each column to its
