@@ -4,13 +4,20 @@ import { useIsDesktop } from "@/hooks/use-media-query";
 /**
  * Slow-drifting blurred gradient washes — the page's ambient motion.
  *
- * Extracted from ContactSection so About and Contact drift with the same
- * vocabulary rather than each inventing one. Callers pass positions and colors;
- * everything about *how* it moves lives here.
+ * This is *panel-local* motion now. The page's background is `PageAurora`, one
+ * fixed layer behind the whole document — About used to carry a full-bleed
+ * `AmbientOrbs` band as well, and a section-scoped aurora that arrives at one
+ * seam and is masked off at the other is precisely what made About read as a
+ * separate world from everything around it. `AmbientOrbs` is therefore down to
+ * one caller: Contact, inside its rounded card, where the panel edge is the
+ * point. Don't reintroduce a section-scoped band — it only fights the page
+ * aurora it's sitting on top of.
+ *
+ * Callers pass positions and colors; everything about *how* it moves lives here.
  *
  * Two rules the orb arrays have to keep:
  *
- * - **Non-harmonic durations** (19 / 25 / 31 …), the same trick StarBackground
+ * - **Non-harmonic durations** (19 / 25 / 31 …), the same trick PageAurora
  *   uses. Round multiples re-sync into one visible pulse every few cycles.
  * - **Only transform and opacity are animated.** These are 400px `blur-3xl`
  *   surfaces; animating anything that repaints them is the most expensive thing

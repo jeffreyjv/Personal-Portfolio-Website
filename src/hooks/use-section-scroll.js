@@ -48,8 +48,13 @@ export function useSectionScroll(ref) {
 
   // Hooks must run unconditionally, so the switch is in the output range rather
   // than around the call — same pattern as HeroSection's parallax.
-  const y = useTransform(scrollYProgress, [0, 1], on ? [56, 0] : [0, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], on ? [0.965, 1] : [1, 1]);
+  // Deliberately small. At 56px/0.965 each section visibly travelled and grew
+  // into place, which made it announce itself as a separate panel arriving —
+  // the page read as five things moving at five speeds rather than one thing
+  // scrolling. What's left is enough to keep the entrance from being a hard cut
+  // and not enough to compete with the continuous background behind it.
+  const y = useTransform(scrollYProgress, [0, 1], on ? [22, 0] : [0, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], on ? [0.99, 1] : [1, 1]);
 
   return { y, scale };
 }

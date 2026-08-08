@@ -156,12 +156,18 @@
    constantly, and a hard horizontal edge is what made the page read as a stack
    of separate pages rather than one continuous scroll. The fade is generous on
    purpose — the flat middle still carries text contrast. */
+/* Translucent, not solid. `PageAurora` is one fixed layer behind the entire
+   document, and an opaque band painted over it punches a hole in that layer for
+   the length of the section — which reinstates exactly the "each section is its
+   own world" reading the continuous background exists to remove. At 0.55 the
+   surface still separates the band from its neighbours; the aurora just carries
+   on through it. */
 @utility section-tint {
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    hsl(var(--surface)) 12%,
-    hsl(var(--surface)) 88%,
+    hsl(var(--surface) / 0.55) 12%,
+    hsl(var(--surface) / 0.55) 88%,
     transparent 100%
   );
 }
