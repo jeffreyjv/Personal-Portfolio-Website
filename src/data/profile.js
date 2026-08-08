@@ -8,5 +8,5 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/jeffreyvincent-796/",
   github: "https://github.com/jeffreyjv",
   youtube: "https://www.youtube.com/@jeffreyjv",
-  resume: "/JeffreyVincent-Resume.pdf",
+  resume: "/Jeffrey_Vincent_Resume.pdf",
 };
